@@ -1,0 +1,54 @@
+﻿@model List<PR3M.Models.LogViewModels>
+@using PagedList;
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+<table class="table">
+    <tr>
+        <th>
+            <a href="#" data-type="Name">Họ và tên</a>
+        </th>
+        <th>
+            Thực hiện
+        </th>
+        <th>
+            Tên tài nguyên
+        </th>
+        <th>
+            Loại tài nguyên
+        </th>
+        <th>
+            Thời gian
+        </th>
+    </tr>
+    @{
+        int i = 0;
+        foreach (var item in Model)
+        {
+            i++;
+            string color = "white";
+            if (i % 2 == 0)
+            {
+                color = "grey";
+            }
+            <tr style="background-color:@color">
+                <td>
+                    @item.UserFullName
+                </td>
+                <td>
+                    @item.ActionName
+                </td>
+                <td>
+                    @item.ObjectName
+                </td>
+                <td>
+                    @item.ObjectType
+                </td>
+                <td>
+                    @item.ActionTime
+                </td>
+            </tr>
+        }
+    }
+</table>

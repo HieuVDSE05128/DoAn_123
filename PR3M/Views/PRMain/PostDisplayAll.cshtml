@@ -1,0 +1,360 @@
+﻿@model PR3M.Models.MaterialsFullControllViewModels
+@using PR3M.DBModel
+@using PR3M.Common
+@{
+    ViewBag.Title = "Index";
+    bool ViewHidden = ViewBag.ViewHidden;
+    var viewHiddenValue = ViewHidden ? "true" : "false";
+    var route = ViewBag.Route;
+    var isSubFolder = ViewBag.IsSubFolder == true ? "true" : "false";
+    var postId = ViewBag.PostId == null ? 0 : ViewBag.PostId;
+}
+@section PrivateCss{
+    <link rel="stylesheet" href="~/Content/Css/PRMain.css" />
+}
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+<section class="body-section">
+    <div class="action">
+        @if (ViewBag.IsSubFolder == true)
+        {
+            <div class="btn btn-success btn-lg su"><i class="fa fa-upload" aria-hidden="true"></i>&ensp;Tải tệp lên</div>
+        }
+        else
+        {
+            <div class="btn btn-success btn-lg su"><i class="fa fa-folder" aria-hidden="true"></i>&ensp;Tạo folder mới </div>
+            <div id="uploadFolder" class="btn btn-success btn-lg"><i class="fa fa-upload" aria-hidden="true">&ensp;Tải folder lên</i></div>
+        }
+    </div>
+    <div class="threat1">
+        @*@{
+                List<PR3M.DBModel.FolderLinkViewModel> list = ViewCommonOutput.GetListLinkFolder(Model.folder.FolderId);
+                int size = list.Count();
+                for (int i = 0; i < size; i++)
+                {
+                    @Html.ActionLink(list[i].FolerName, "Index", "PRMain", new { folderId = list[i].FolderId }, new { @class = "", @style="" })
+                    if (i < size - 1)
+                    {
+                        <a> > </a>
+                    }
+                }
+            }*@
+
+    </div>
+</section>
+<!-- Modal Create file -->
+@if (ViewBag.IsSubFolder == false)
+{
+    <div class="bisu">
+        <div class="modal-content-bisu">
+            <span class="close-modal">&times;</span>
+            @using (Html.BeginForm("CreateFolder", "PRMain", FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <label for="email">Tên folder mới: </label>
+                <input type="text" name="folderNameInput" placeholder="Enter name" autocomplete="off" required />
+                <input type="hidden" name="route" value="@route" />
+                <button type="submit" class="accept">Đồng ý</button>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <!-- Modal upload files -->
+    <div class="bisu">
+        <div class="modal-content-bisu">
+            <span class="close-modal">&times;</span>
+            @using (Html.BeginForm("UploadFile", "PRMain", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
+            {
+                <label for="email">Tải file mới: </label>
+                <input type="file" name="fileInput" id="fileInput" multiple />
+                <input type="hidden" name="route" value="@route" />
+                <input type="hidden" name="currentFolderId" value="@postId" />
+                <button type="submit" class="accept">Đồng ý</button>
+            }
+        </div>
+    </div>
+}
+
+<section class="body-section">
+    @if (TempData["message"] != null)
+    {
+        <div class="alert alert-success">
+            <strong>@TempData["message"].ToString()</strong>
+        </div>
+    }
+    @if (TempData["errorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <strong>@TempData["errorMessage"].ToString()</strong>
+        </div>
+    }
+    <div class="file-zone">
+        @*@if (Model..ParentId != 0)
+            {
+                <div class="file-data">
+                    <i class="fa fa-folder" aria-hidden="true" style="margin: 20px 15px"></i>
+                    <p>@Html.ActionLink("...", "Index", "PRMain", new { folderId = Model.folder.ParentId }, new { @class = "newfile", }) </p>
+                </div>
+            }
+            @foreach (Folder f in Model.Folders)
+            {
+                <div class="file-data">
+                    <i class="fa fa-folder" aria-hidden="true" style="margin: 20px 15px"></i>
+                    <p>@Html.ActionLink(@f.FolderName, "Index", "PRMain", new { folderId = f.FolderId }, new { @class = "newfile", }) </p>
+                    <span class="close-modal-file">&times;</span>
+                </div>
+            }*@
+        @{
+            if (Model.Posts != null)
+            {
+                foreach (var post in Model.Posts)
+                {
+                    <div class="file-data">
+                        <i class="fa fa-folder" aria-hidden="true" style="margin: 20px 15px"></i>
+                        <p>@Html.ActionLink(post.PostTitle, "PostDisplayAll", "PRMain", new { PostId = post.PostId, route = route, isSubfolder = true }, new { @class = "newfile", }) </p>
+                        <button class="delete-file" data-toggle="modal" value="@post.PostId" data-target="#deleteFolder" onclick="SetDeleteFolder(this.value, @route)">&times;</button>
+                    </div>
+                }
+            }
+        }
+    </div>
+</section>
+<section>
+    <div id="container">
+        <div id="myBtnContainer">
+            <div class="bton active" onclick="filterSelection('all')"> Show all</div>
+            <div class="bton" onclick="filterSelection('Folder')">Document</div>
+            <div class="bton" onclick="filterSelection('Image')">Image</div>
+            <div class="bton" onclick="filterSelection('Video')">Video</div>
+        </div>
+        <div class="buttons">
+            <button class="grid btn btn-info btn-lg"><i class="fa fa-th" aria-hidden="true"></i>&ensp;Grid View</button>
+            <button class="list btn btn-info btn-lg"><i class="fa fa-list" aria-hidden="true"></i>&ensp;List View</button>
+        </div>
+        <div class="checkbox-file">
+            <form action="/PRMain/SearchFile" class="checkbox-file-form" method="post">
+                @Html.AntiForgeryToken()
+                @{
+                    var searchKey = TempData["searchKey"] != null ? TempData["searchKey"].ToString() : "";
+                }
+                <div>
+                    <input type="submit" id="searchFiles" class="search-button" value="Search" />
+                    <input type="search" id="gsearch" name="searchKey" value="@searchKey">
+                    <input type="hidden" name="route" value="@route" />
+                    <input type="hidden" name="isSubfolder" value="@isSubFolder" />
+                    <input type="hidden" name="PostId" value="@postId" />
+                </div>
+            </form>
+            <form class="checkbox-file-form">
+                @Html.Hidden("ViewHidden", ViewHidden)
+                @{
+                    if (ViewHidden == true)
+                    {
+                        @Html.ActionLink("Do not show hidden materials", "Index", "PRMain", new { folderId = Model.post.PostId, ViewHidden = ViewHidden }, new { @class = "btn-viewhiden", })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Show hidden materials", "Index", "PRMain", new { folderId = Model.post.PostId, ViewHidden = ViewHidden }, new { @class = "btn-viewhiden", })
+                    }
+                }
+            </form>
+            @if (TempData["searchResult"] != null && Convert.ToBoolean(TempData["searchResult"]))
+            {
+                <div><h2>Kết quả tìm kiếm:</h2></div>
+            }
+        </div>
+        <div class="grid ul" id="displayFiles">
+            @{
+                if (Model.post != null)
+                {
+                    foreach (var m in ViewBag.Materials)
+                    {
+                        string filterType = "";
+                        int typeOfMine = CommonOutput.typeOfMIME(m.MIMEType);
+                        if (typeOfMine == 1 || typeOfMine == 4)
+                        {
+                            filterType = "Image li";
+                        }
+                        else if (typeOfMine == 2)
+                        {
+                            filterType = "Video li";
+                        }
+                        else if (typeOfMine == 3)
+                        {
+                            filterType = "Folder li";
+                        }
+                        <div id="@("materials" + m.MaterialId)" class="filterDiv @filterType">
+                            <div class="gallery">
+                                @if (typeOfMine == 1)
+                                {
+                                    <a target="_blank" href="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.MaterialId)" class="image-gallery">
+                                        <img src="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.MaterialId)" alt="Cinque Terre">
+                                    </a>
+                                }
+                                else if (typeOfMine == 2)
+                                {
+                                    <video controls>
+                                        <source src="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.MaterialId)" type="@CommonOutput.RtnVideoControlType(m.MIMEType)">
+                                        Your browser does not support HTML5 video.
+                                    </video>
+                                }
+                                else if (typeOfMine == 3)
+                                {
+                                    <a target="_blank" href="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.MaterialId)" class="image-gallery">
+                                        <img src="~/Content/Image/Icon/@(m.MIMEType + ".png")" alt="Cinque Terre">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a target="_blank" href="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.MaterialId)" class="image-gallery">
+                                        <img src="~/Content/Image/Icon/file.png" alt="Cinque Terre">
+                                    </a>
+                                }
+                                <div class="infor-gallery">
+                                    <div class="desc">@m.MaterialDisplayName</div>
+                                    <div class="name-action-file">
+                                        <div>
+                                            <i class="fa fa-user" aria-hidden="true" style="padding: 0px; margin: 0px 1px"></i>&ensp;@m.User.FullName
+                                        </div>
+                                        <div>
+                                            <i class="fa fa-calendar" aria-hidden="true" style="padding: 0px; margin: 0px 1px"></i>&ensp;@m.LaunchedDate
+                                        </div>
+                                    </div>
+                                    <div class="group">
+                                        <button type="submit" class="btn btn-success" onclick="location.href = '@Url.Action("Download", "PRMain", new {MaterialsId = m.MaterialId})'">Download</button>
+                                        <button type="button" class="btn btn-success" onclick="deleteMaterialModalConfirm(@m.MaterialId)">Delete</button>
+                                        <button type="button" class="btn btn-success heo" onclick="location.href = '@Url.Action("EditMaterials", "PRMain", new {MaterialsId = m.MaterialId})'">Edit</button>
+                                        @*@if (m.IsHilde != null && m.IsHilde)
+        {
+            <a href="#" class="btn btn-success btn-active" data-id="@m.MaterialId">UnHide</a>
+
+        }
+        else
+        {
+
+        }*@
+                                        <a href="#" class="btn btn-success btn-active" data-id="@m.MaterialId" onclick="location.href = '@Url.Action("Hide", "PRMain", new {materialId = m.MaterialId, postId = m.PostId, route = ViewBag.Route, isSubFolder = ViewBag.IsSubFolder})'">Hide</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</section>
+<div id="id01" class="modal">
+    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+    @using (Html.BeginForm("DeleteMaterial", "PRMain", FormMethod.Post, new { @class = "modal-content" }))
+    {
+        <div class="container">
+            <h1>Delete Document</h1>
+            <div class="question">Are you sure you want to delete your document?</div>
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                @Html.Hidden("MaterialID", null, new { @id = "MaterialIDForDelete" })
+                <input type="hidden" name="currentFolderId" value="@postId" />
+                <input type="hidden" name="isSubFolder" value="@isSubFolder" />
+                <input type="hidden" name="route" value="@route" />
+                <input type="hidden" name="viewHidden" value="@viewHiddenValue" />
+                <button type="submit" class="deletebtn">Delete</button>
+            </div>
+        </div>
+    }
+</div>
+<!-- Delete Modal -->
+<div id="delete" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("DeleteFolder", "PRMain", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <button type="button" class="close" onclick="document.getElementById('delete').style.display='none'">&times;</button>
+                    <h4 class="modal-title">Xoá Folder</h4>
+                </div>
+                <div class="modal-body">
+                    Bạn chắc chắn muốn xóa folder <span id="folderName"></span>
+                    <input type="hidden" id="postId" name="postId" value="" />
+                    <input type="hidden" id="route" name="route" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Confirm</button>
+                    <button type="button" class="btn btn-default" onclick="document.getElementById('delete').style.display='none'">Close</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+@section scripts{
+    <script src="~/Scripts/JS/Account.js"></script>
+    <script src="~/Scripts/JS/PRMainController.js"></script>
+    <script src="~/Scripts/jquery.uploadfile.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#uploadFolder").uploadFile({
+                url: "/PRMain/UploadFolder",
+                fileName: "uploadFolder",
+                afterUploadAll: function (obj) {
+                    window.location.href = "/PRMain/PostDisplayAll?route=" + @route + "&isSubfolder=" + false;
+                }
+            });
+        });
+
+        function SetDeleteFolder(value, route) {
+            document.getElementById('delete').style.display = 'block';
+            $('#folderName').html("");
+            $.ajax({
+                url: "/PRMain/GetFolderName",
+                data: { postId: value },
+                success: function(data) {
+                    $('#folderName').html('<b>' + data + '</b>');
+                    $('#postId').val(value);
+                    $('#route').val(route);
+                },
+                error: function() {
+                    alert("Error");
+                }
+            });
+        }
+
+        function CheckMD5(MaterialId) {
+            $.ajax({
+                url: "/PRMain/CheckMD5",
+                data: { MaterialId: MaterialId },
+                success: function (data) {
+                    if (data.status == true) {
+
+                    } else {
+
+                    }
+                }error: function () {
+                    alert("Error");
+                }
+            });
+        }
+
+        @*function hideMaterial(materialId, postId, route) {
+            var value = '@ViewBag.IsSubFolder';
+            var isSubFolder = false;
+            if (value === "True") {
+                isSubFolder = true;
+            }
+            $.ajax({
+                url: "/PRMain/Hide",
+                data: { materialId: materialId, postId: postId, route: route, isSubFolder: isSubFolder },
+                success: function (data) {
+                    $('#displayFiles').html(data);
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }*@
+    </script>
+}

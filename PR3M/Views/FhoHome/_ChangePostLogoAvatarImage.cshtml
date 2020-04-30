@@ -1,0 +1,111 @@
+﻿@model PR3M.Models.PostLogoChooseAvatarImageViewModel
+
+@using (Html.BeginForm("ChangePostLogoAvatarImage", "FhoHome", FormMethod.Post))
+{
+
+    <div class="header-modal">
+        <div class="choice">
+            @*<a class="cancel">Save</a>*@
+            <button class="but-modalChooseLogo" type="submit" onclick="">Save</button>
+        </div>
+        <div class="choice">
+            <button type="button" class="but-modalChooseLogo" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+    <hr />
+    <h3><b>Đề xuất hình ảnh</b></h3>
+    <div id=""></div>
+    @Html.AntiForgeryToken()
+    @Html.Hidden("PostId", Model.PostId, new { @id = "inputPostId" })
+    @Html.Hidden("MaterialId", Model.MaterialChoose, new { @id = "inputMaterialId" })
+    List<PR3M.DBModel.Material> materials = Model.ImageForLogoChoose.ToList();
+    int size = materials.Count();
+    for (int i = 0; i < size; i++)
+    {
+        int limit = 0;
+        if (i + 5 < size)
+        {
+            limit = i + 5;
+            <div class="group-image">
+                @for (int j = i; j <= limit; j++)
+                {
+                <div class="image1">
+                    @if (materials[j].MaterialId != Model.MaterialChoose)
+                    {
+                        <img src="~/Content/Materials/Root/Logo/@(materials[j].Post.PostHashRealFolder + "/" + materials[j].MaterialName + "." + materials[j].MIMEType)" class="modal-image" onclick="AddOrRemoveBorder(this,@materials[j].MaterialId)" id="materials@(j)">
+                    }
+                    else
+                    {
+                        <img src="~/Content/Materials/Root/Logo/@(materials[j].Post.PostHashRealFolder + "/" + materials[j].MaterialName + "." + materials[j].MIMEType)" class="modal-image bovien" onclick="AddOrRemoveBorder(this,@materials[j].MaterialId)" id="materials@(j)">
+                    }
+                    <div class="name-image">Tên ảnh</div>
+                </div>
+                }
+            </div>
+            i = limit;
+        }
+        else
+        {
+            limit = size - 1;
+            <div class="group-image">
+                @for (int j = i; j <= limit; j++)
+                {
+                <div class="image1">
+                    @if (materials[j].MaterialId != Model.MaterialChoose)
+                    {
+                        <img src="~/Content/Materials/Root/Logo/@(materials[j].Post.PostHashRealFolder + "/" + materials[j].MaterialName + "." + materials[j].MIMEType)" class="modal-image" onclick="AddOrRemoveBorder(this,@materials[j].MaterialId)" id="materials@(j)">
+                    }
+                    else
+                    {
+                        <img src="~/Content/Materials/Root/Logo/@(materials[j].Post.PostHashRealFolder + "/" + materials[j].MaterialName + "." + materials[j].MIMEType)" class="modal-image bovien" onclick="AddOrRemoveBorder(this,@materials[j].MaterialId)" id="materials@(j)">
+                    }
+                    <div class="name-image">@materials[j].MaterialDisplayName</div>
+                </div>
+
+                }
+                @for (int j = 1; j <= 6 - (limit + 1); j++)
+                {
+                    i++;
+                    <div class="image1" />
+                }
+
+            </div>
+        }
+    }
+
+}
+<script type="text/javascript">
+
+    function closeModal() {
+        var modal = document.getElementById("Demo");
+        modal.style.display = "none";
+    }
+
+
+    function AddOrRemoveBorder(imgClick, valueInputID) {
+        var classValue = imgClick.getAttribute("class");
+        var imageList = document.getElementsByClassName('modal-image');
+        if (classValue.includes("bovien")) {
+            var res = classValue.split(" ");
+            var length = res.length;
+            imgClick.classList.remove('bovien');
+        } else {
+            for (var i = 0; i < imageList.length; i++) {
+                imageList[i].classList.remove('bovien');
+            }
+            imgClick.setAttribute("class", classValue + " bovien");
+            var hiddenInputMaterial = document.getElementById('inputMaterialId');
+            hiddenInputMaterial.setAttribute("value", valueInputID);
+        }
+    }
+
+</script>
+
+
+
+
+
+
+
+
+

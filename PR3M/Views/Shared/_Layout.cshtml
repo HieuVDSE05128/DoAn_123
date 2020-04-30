@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Hệ thống số hóa thương hiệu FPT Education</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    @RenderSection("HeaderAndFooter", required: false)
+    @RenderSection("PrivateCss", required: false)
+</head>
+<body>
+    @if (IsSectionDefined("HeaderAndFooter"))
+    {
+        <div class="header">
+            <div class="header-top">
+                <div class="text-header">
+                    @RenderSection("TextHeaderTopBefore", required: false);
+                    <div class="text-header-top"><a href="">Tài nguyên số</a></div>
+                    <div class="text-header-top"><a href="">Tạp chí IHE</a></div>
+                    <div class="text-header-top"><a href="" class="text-header-top-orange">Thương hiệu</a></div>
+                    <div class="text-header-top"><a href="">Tuyển dụng</a></div>
+                    @RenderSection("TextHeaderTopAfter", required: false);
+                </div>
+            </div>
+            <div class="banner">
+                <div class="inside-banner">
+                    <div class="image-organization-fpt"><a href="" class="img-logo-fpt"><img src="~/Content/Image/Header.png" alt="" class="logo-fpt"></a></div>
+                    <div class="empty-size"></div>
+                    <div class="inside-banner-slider-search">
+                        <div class="flagandsearch">
+                            @using (Html.BeginForm("Search", "Home",null, FormMethod.Get, new { @class = "formSearch" }))
+                            {
+                                <div class="search-input"><input type="text" name="SearchText" class="search-headder"></div>
+                                <button class="button-search" type="submit"><i><a class="text-search">Tìm kiếm</a></i></button>
+                            }
+                        </div>
+                        <div class="title-zone">
+                            <div class="title"><a href="">About</a></div>
+                            <div class="title"><a href="">Tin tức</a></div>
+                            <div class="title"><a href="">Tuyển sinh</a></div>
+                            <div class="title"><a href="">Đào tạo</a></div>
+                            <div class="title"><a href="">Hợp tác quốc tế</a></div>
+                            <div class="title"><a href="">Tin tức sinh viên</a></div>
+                            <div class="title"><a href="">Bàn chuyện giáo dục</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @RenderBody()
+    @if (IsSectionDefined("HeaderAndFooter"))
+    {
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-title">
+                    <b class="footer-title-name">About</b>
+                </div>
+                <div class="footer-title">
+                    <b class="footer-title-name">Tin tức</b>
+                    <ul class="title-menu">
+                        <li><a href="" class="text-title-footer">Học tập khác biệt</a></li>
+                        <li><a href="" class="text-title-footer">Môi trường giàu<br>trải nghiệm</a></li>
+                        <li><a href="" class="text-title-footer">Đa dạng sắc màu<br>quốc tế</a></li>
+                        <li><a href="" class="text-title-footer">Thành công<br>sau tốt nghiệp</a></li>
+                        <li><a href="" class="text-title-footer">FPT Edu - Chuyện<br>đất & người</a></li>
+                        <li><a href="" class="text-title-footer">FPT Edu - Tin<br>mới nhất</a></li>
+                    </ul>
+                </div>
+                <div class="footer-title">
+                    <b class="footer-title-name">Tuyển sinh</b>
+                    <ul class="title-menu">
+                        <li><a href="" class="text-title-footer">Đại học FPT</a></li>
+                        <li><a href="" class="text-title-footer">Đại học Greenwich<br>Việt nam</a></li>
+                        <li><a href="" class="text-title-footer">Cao đẳng Thực hành<br>FPT Polytechnich</a></li>
+                        <li><a href="" class="text-title-footer">Trường THPT FPT</a></li>
+                        <li><a href="" class="text-title-footer">Trường Tiểu học FPT</a></li>
+                        <li><a href="" class="text-title-footer">Viện Quản trị<br>Kinh doanh FPT</a></li>
+                        <li><a href="" class="text-title-footer">FPT Aptech</a></li>
+                        <li><a href="" class="text-title-footer">FPT Arena</a></li>
+                        <li><a href="" class="text-title-footer">FPT Jetking</a></li>
+                        <li><a href="" class="text-title-footer">Nanoversity</a></li>
+                        <li><a href="" class="text-title-footer">BTEC</a></li>
+                        <li><a href="" class="text-title-footer">Đại học Trực tuyến<br>FUNix</a></li>
+                    </ul>
+                </div>
+                <div class="footer-title">
+                    <b class="footer-title-name">Đào tạo</b>
+                    <ul class="title-menu">
+                        <li><a href="" class="text-title-footer">Đại học FPT</a></li>
+                        <li><a href="" class="text-title-footer">Đại học Greenwich<br>Việt nam</a></li>
+                        <li><a href="" class="text-title-footer">Cao đẳng Thực hành<br>FPT Polytechnich</a></li>
+                        <li><a href="" class="text-title-footer">Trường THPT FPT</a></li>
+                        <li><a href="" class="text-title-footer">Trường Tiểu học FPT</a></li>
+                        <li><a href="" class="text-title-footer">Viện Quản trị<br>Kinh doanh FPT</a></li>
+                        <li><a href="" class="text-title-footer">FPT Aptech</a></li>
+                        <li><a href="" class="text-title-footer">FPT Arena</a></li>
+                        <li><a href="" class="text-title-footer">FPT Jetking</a></li>
+                        <li><a href="" class="text-title-footer">Nanoversity</a></li>
+                        <li><a href="" class="text-title-footer">BTEC</a></li>
+                        <li><a href="" class="text-title-footer">Đại học Trực tuyến<br>FUNix</a></li>
+                    </ul>
+                </div>
+                <div class="footer-title">
+                    <b class="footer-title-name">Hợp tác quốc tế</b>
+                    <ul class="title-menu">
+                        <li><a href="" class="text-title-footer">Trung tâm phát triển<br>sinh viên quốc tế - FGO</a></li>
+                        <li><a href="" class="text-title-footer">Trung tâm trao đổi<br>sinh viên quốc tế - FISEC</a></li>
+                    </ul>
+                </div>
+                <div class="footer-title">
+                    <b class="footer-title-name">Tin tức sinh viên</b>
+                </div>
+                <div class="footer-title line">
+                    <div class="line-footer"></div>
+                </div>
+                <div class="footer-title infor">
+                    <div class="info-base">
+                        <b class="footer-title-name">FPT EDUCATION</b>
+                        <ul class="title-menu">
+                            <li>Hoa Lac High Tech Park, Hanoi, Vietnam</li>
+                            <li class="text-info-base">Email:fpteducation@fe.edu.vn</li>
+                            <li>
+                                <div class="icon-footer-web">
+                                    <img src="~/Content/Image/Icon/facebook.png" class="image-footer-web">
+                                    <img src="~/Content/Image/Icon/youtube.png" class="image-footer-web">
+                                    <img src="~/Content/Image/Icon/frog.png" class="image-footer-web">
+                                </div>
+                            </li>
+                            <li>Copyright &copy; 2017 FPT Education</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @RenderSection("scripts", required: false)
+</body>
+</html>

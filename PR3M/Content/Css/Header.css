@@ -1,0 +1,258 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.flagandsearch {
+    display: flex;
+    justify-content: flex-end;
+}
+
+img.flag {
+    width: 20px;
+    border: 1px solid #0000008a;
+    border-radius: 100%;
+}
+
+.flageng {
+    padding: 4.5rem 0rem;
+}
+
+.flagvn {
+    padding: 4.5rem 2rem;
+}
+
+img.logo-school-fpt {
+    height: 100%;
+}
+
+.header-project {
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    height: 30px;
+    background-color: black;
+    line-height: 30px;
+    padding: 0rem 10rem;
+    justify-content: flex-end;
+}
+
+.zone-header3 {
+    display: flex;
+    height: 30px;
+    justify-content: space-between;
+}
+
+.header-title-trademark a {
+    padding: 7px 2rem;
+    color: #fff;
+    text-decoration: none;
+    font-family: sans-serif;
+}
+
+.header-img {
+    width: 100%;
+    display: flex;
+    height: 16rem;
+    background-color: rgb(223, 222, 222);
+    padding: 1rem 10rem;
+}
+
+.img-school {
+    width: 30%;
+    height: 14rem;
+}
+
+.search-title {
+    width: 70%;
+}
+
+.search {
+    display: flex;
+    float: right;
+    padding: 4rem 0rem;
+}
+
+.search-title .search .button-search a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.button-search i {
+    padding: 7px 1.5rem;
+    line-height: 3rem;
+    background-color: orange;
+}
+
+.title-zone {
+    display: flex;
+    float: right;
+}
+
+.title {
+    font-size: 18px;
+    padding-left: 4rem;
+}
+
+    .title a {
+        text-decoration: none;
+        color: black;
+    }
+
+input.search-headder {
+    height: 3rem;
+    border: 1px solid orange;
+    width: 20rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .header {
+        padding: 0rem 1rem;
+    }
+
+    .header-img {
+        padding: 1rem 2rem;
+    }
+
+    .img-school {
+        width: 35%;
+        height: 14rem;
+    }
+
+    img.logo-school-fpt {
+        width: 100%;
+        height: 100%;
+    }
+
+    .search-title {
+        width: 65%;
+    }
+
+    .title {
+        font-size: 14px;
+        padding-left: 1.4rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 0rem 8rem;
+    }
+
+    .header-img {
+        padding: 1rem 1rem;
+        display: block;
+        height: 40rem;
+    }
+
+    .img-school {
+        width: 100%;
+        height: 14rem;
+        text-align: center;
+    }
+
+    img.logo-school-fpt {
+        width: 100%;
+        height: auto;
+    }
+
+    .search-title {
+        width: 100%;
+    }
+
+    .search {
+        display: flex;
+        padding-left: 25rem;
+        justify-content: center;
+        padding-right: 19rem;
+        padding-top: 10rem;
+    }
+
+    .title-zone {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .title {
+        font-size: 18px;
+        padding-left: 2rem;
+        margin: auto;
+        padding-bottom: 2rem;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .header {
+        padding: 0rem 0rem;
+    }
+
+    .header-title-trademark a {
+        color: #fff;
+        padding: 0rem 2px;
+        text-decoration: none;
+        font-size: 14px;
+        font-family: sans-serif;
+    }
+
+    .zone-header3 {
+        width: 100%;
+    }
+
+    .img-school {
+        width: 100%;
+        height: auto;
+        padding-top: 4rem;
+    }
+
+    img.logo-school-fpt {
+        width: 100%;
+        height: 100%;
+    }
+
+    .header-img {
+        display: block;
+        height: 55rem;
+    }
+
+    .search-title {
+        width: 100%;
+        text-align: center;
+    }
+
+    .button-search {
+        padding-top: 1rem;
+    }
+
+        .button-search i {
+            line-height: 3rem;
+            background-color: orange;
+        }
+
+    .search {
+        display: block;
+        width: 100%;
+        padding: 3rem 0rem;
+    }
+
+    .title-zone {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .title {
+        font-size: 16px;
+        padding: 0.5rem;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+}

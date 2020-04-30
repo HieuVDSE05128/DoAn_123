@@ -1,0 +1,26 @@
+﻿@using PR3M.Common
+@model PR3M.Models.HomePartialViewModels
+<div class="download-total">@Html.ActionLink("Tải tất cả", "DownloadZipFile", new { PostId = Model.Post.PostId }, new { @class = "download-logo-document-education" })</div>
+@*<a href="Home/DownloadZipFile?PostId=@Model.Post.PostId" class="download-logo-document-education"><i class="fas fa-file-download"></i>&emsp;Tải tất cả</a>*@
+<h2 class="text-center"><b>Logo @Model.Post.PostTitle</b></h2>
+<div class="group-image">
+    @foreach (var m in Model.Materials)
+    {
+        <div class="image1">
+            @{
+                int typeOfMime = CommonOutput.typeOfMIME(m.MIMEType);
+                if (typeOfMime == 1)
+                {
+                    <img src="~/Content/Materials/Root/Logo/@(m.Post.PostHashRealFolder+"/"+m.MaterialName+"."+m.MIMEType)" class="modal-image">
+                }
+                else
+                {
+                    <img src="~/Content/Image/Icon/@(m.MIMEType+".png")" class="modal-image">
+                }
+            }
+            <div class="name-image">@m.MaterialDisplayName</div>
+            <a href="@Url.Action("Download", "Home", new { MaterialId = m.MaterialId })" class="download-document-file">Tải về</a>
+        </div>
+    }
+</div>
+

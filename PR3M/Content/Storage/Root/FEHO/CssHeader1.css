@@ -1,0 +1,140 @@
+﻿.header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+}
+
+.header-top {
+    height: 40px;
+    width: 100%;
+    background-color: #000000;
+}
+
+.text-header {
+    display: flex;
+    line-height: 40px;
+    justify-content: flex-end;
+    margin: 0px 46px 0px 0px;
+}
+
+.text-header-top {
+    margin-left: 50px;
+}
+
+    .text-header-top a {
+        text-decoration: none;
+        color: #ffffff;
+        font-family: sans-serif;
+        font-size: 13px;
+    }
+
+        .text-header-top a.text-header-top-orange {
+            color: #f26f21;
+            font-weight: bold;
+        }
+
+.banner {
+    width: 100%;
+    height: 127px;
+    background-color: #eeeeee;
+}
+
+.image-organization-fpt {
+    object-fit: cover;
+    width: 439px;
+    margin: -5px 0px 0px -17px;
+}
+
+.inside-banner {
+    height: 100%;
+    display: flex;
+    margin: 0px 43px 0px 43px;
+}
+
+img.logo-fpt {
+    width: 100%;
+    height: 100%;
+}
+
+.inside-banner-slider-search {
+    margin-left: auto;
+}
+
+.flagandsearch {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.flag {
+    width: 32px;
+    height: 32px;
+    margin-left: 15px;
+}
+
+img.flag-inside {
+    width: 100%;
+    height: auto;
+    border: 2px solid #d2d3cc;
+    border-radius: 50%;
+}
+
+.search {
+    display: flex;
+}
+
+input.search-headder {
+    width: 222px;
+    height: 33px;
+    border: 2px solid #f26f21;
+    margin-left: 21px;
+}
+
+.button-search {
+    background-color: #f1651f;
+    width: 80px;
+    height: 33px;
+    border: none;
+}
+
+.formSearch {
+    display: flex;
+}
+
+i {
+    line-height: 17px;
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+}
+
+a.text-search {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.title-zone {
+    display: flex;
+    margin-top: 41px;
+    margin-bottom: 14px;
+}
+
+.title {
+    margin-left: 45px;
+    font-size: 18px;
+}
+
+    .title a {
+        text-decoration: none;
+        color: #000000;
+    }
+
+input.search-headder {
+    width: 220px;
+    height: 33px;
+    border: 2px solid #f26f21;
+    margin-left: 21px;
+    font: 100 19px Arial;
+}

@@ -1,0 +1,46 @@
+﻿@model PR3M.Models.PRSystemCreateViewModels
+
+@using (Html.BeginForm("CreatePRSystem", "FhoHome", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>PRSystemCreateViewModels</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.PRSystemName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.PRSystemName, null, new { @class = "form-control ABC" })
+                @Html.ValidationMessageFor(model => model.PRSystemName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PRSystemVName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.PRSystemVName, new { @class = "form-control ABC" })
+                @Html.ValidationMessageFor(model => model.PRSystemVName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PRSystemIndependent, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.PRSystemIndependent)
+                    @Html.ValidationMessageFor(model => model.PRSystemIndependent, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        @{ 
+            string rtnLink = ViewBag.rtnLink;
+        }
+        @Html.Hidden("rtnLink", rtnLink, new { @id="rtnLink"});
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}

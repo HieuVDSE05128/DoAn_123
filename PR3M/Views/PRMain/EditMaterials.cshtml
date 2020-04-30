@@ -1,0 +1,132 @@
+﻿@model PR3M.DBModel.Material
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>EditMaterials</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    @using (Html.BeginForm("EditMaterials", "PRMain", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Material</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.MaterialsId)
+            <div class="form-group">
+                @Html.LabelFor(model => model.MaterialsName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.Hidden("oldMaterialName", Model.MaterialsName)
+                    @Html.EditorFor(model => model.MaterialsName, new { htmlAttributes = new { @class = "form-control", @id = "materialNameInput" } })
+                    @Html.ValidationMessageFor(model => model.MaterialsName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.FolderId, "Folder", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("FolderId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FolderId, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+            @* Folder will be change if dont focus on it *@
+            @Html.HiddenFor(model => model.FolderId, new { value = ViewBag.currentFolderId })
+            <div class="form-group">
+                @Html.LabelFor(model => model.URL, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.URL, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.URL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.LaunchedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LaunchedDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.LaunchedDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsPublic, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsPublic)
+                        @Html.ValidationMessageFor(model => model.IsPublic, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsHIde, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsHIde)
+                        @Html.ValidationMessageFor(model => model.IsHIde, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.MaterialsDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MaterialsDescription, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MaterialsDescription, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.MIMEType, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MIMEType, new { htmlAttributes = new { @class = "form-control", @id = "mimeTypeInput", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.MIMEType, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Size, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Size, new { htmlAttributes = new { @class = "form-control", @id = "sizeInput", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.Size, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreateById, "Created by", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.CreateById, new { @Value = @ViewBag.currentUserId })
+                    <input class="form-control text-box single-line" type="text" value="@ViewBag.currentUser" readonly="readonly" />
+                    @Html.ValidationMessageFor(model => model.CreateById, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <input type="hidden" name="currentFolderId" value="@ViewBag.currentFolderId" />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+    <script>$(document).ready(function () {
+            $('input[id = "fileInput"]').change(function (e) {
+                var fileName = e.target.files[0].name;
+                //var size = e.target.files[0].
+                var extension = fileName.replace(/^.*\./, '');
+                var size = parseInt(e.target.files[0].size);
+                $('input[id = "materialNameInput"]').val(fileName);
+                $('input[id = "mimeTypeInput"]').val(extension);
+                $('input[id = "sizeInput"]').val(size);
+            });
+        });</script>
+</body>
+</html>

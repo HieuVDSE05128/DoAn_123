@@ -1,0 +1,271 @@
+﻿@model PR3M.Models.SliderEditViewModel
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+@{
+    ViewBag.Title = "EditSlider";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PrivateCss{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/Content/Css/CssHomePage.css" rel="stylesheet" />
+    <style>
+        .changeslider {
+            padding: 5rem 45px 0rem 45px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: center;
+            padding: 1rem;
+            font-size: 19px;
+            font-family: sans-serif;
+        }
+
+        img.slide-image {
+            width: 400px;
+            height: 200px;
+            display: block;
+            margin: 1rem auto;
+            object-fit: cover;
+        }
+
+        img.slide-image-change {
+            width: 400px;
+            height: 200px;
+            display: block;
+            margin: 1rem auto;
+            object-fit: cover;
+        }
+
+        img.slide-image-addNew {
+            width: 400px;
+            height: 200px;
+            display: block;
+            margin: 1rem auto;
+            object-fit: cover;
+        }
+
+        .action-slider {
+            text-align: center;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .buttonEditSlider {
+            font-size: 18px;
+            font-family: sans-serif;
+            border: none;
+            background-color: red;
+            color: #fff;
+            padding: 5px 30px;
+            margin: -40px;
+        }
+
+        input#myFile {
+            float: right;
+        }
+
+        .button {
+            font-size: 18px;
+            font-family: sans-serif;
+            border: none;
+            background-color: red;
+            color: #fff;
+            width: 20%;
+            cursor: pointer;
+            padding: 5px 30px;
+        }
+
+        button.save-fixed {
+            display: block;
+            margin: auto;
+            margin-bottom: 4rem;
+            border-radius: 10px;
+            background-color: green;
+            padding: 10px 45px;
+            border: none;
+            color: #FFF;
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 3rem;
+        }
+
+        td.stt {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        i.fas.fa-plus {
+            background-color: orange;
+            border-radius: 5px;
+            color: green;
+            font-size: 25px;
+        }
+
+        a.add-slider {
+            padding: 0rem 45px 2rem 45px;
+            display: block;
+            margin-left: auto;
+            width: 111px;
+        }
+    </style>
+}
+
+<div onclick="window.location.reload()">Xóa tất cả</div>
+
+@using (Html.BeginForm("EditSlider", "FhoHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="changeslider">
+        <h2>Thay đổi hình ảnh trình chiếu</h2>
+        <table style="width:100%" id="tableContent">
+            <tr>
+                <th>Hình ảnh hiện tại</th>
+                <th>Hình ảnh thay đổi</th>
+                <th>Tác vụ</th>
+            </tr>
+            @foreach (PR3M.DBModel.Slider slide in Model.Sliders)
+            {
+                <tr id="tr@(slide.SliderId)">
+                    <td>
+                        <img src="~/Content/Image/Slider/@slide.SliderName" class="slide-image">
+                    </td>
+                    <td id="slide@(slide.SliderId)">
+                        <img id="changeImage@(slide.SliderId)" class="slide-image-change" />
+                        @Html.Hidden("Status", "Nothing",new { @id="hiddenStatus"+slide.SliderId})
+                        @Html.Hidden("SlideId", slide.SliderId)
+                    </td>
+                    <td>
+                        <div class="action-slider">
+                            <div class="button" onclick="SetDeleteOldImage(@(slide.SliderId))">Xóa</div>
+                            <input type="file" id="myFile" name="imageChange" onchange="AddImageToChangeImageSlot(event,@slide.SliderId)" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <a onclick="addNewRow()" class="add-slider"><i class="fas fa-plus"></i></a>
+    <button class="save-fixed">Lưu chỉnh sửa </button>
+}
+@section scripts{
+    <script type="text/javascript">
+        var idBtnInputCount = 0;
+        function hideBtnInput(idBtnInputToHide) {
+            document.getElementById("fileInput" + idBtnInputToHide).setAttribute('hidden', "hidden");
+            document.getElementById("labelForInput" + idBtnInputToHide);
+            idBtnInputCount++;
+        }
+
+        function SetDeleteOldImage(id) {
+            $('#tr' + id).remove();
+        }
+
+        function AddImageToChangeImageSlot(evt, id) {
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var files = evt.target.files;
+            var file = files[0];
+            var fileReader = new FileReader();
+
+            fileReader.onload = function (progressEvent) {
+                var url = fileReader.result;
+                var iconForFile = document.getElementById("changeImage" + id);
+                iconForFile.src = url;
+                var hiddenStatus = document.getElementById('hiddenStatus' + id);
+                hiddenStatus.setAttribute("value", "Changed");
+            }
+
+            fileReader.readAsDataURL(file);
+        }
+
+        function AddImageToCreateNewImageSlot(evt, id) {
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var files = evt.target.files;
+            var file = files[0];
+            var fileReader = new FileReader();
+
+            fileReader.onload = function (progressEvent) {
+                var url = fileReader.result;
+                var iconForFile = document.getElementById("changeImage" + id);
+                iconForFile.src = url;
+                var hiddenStatus = document.getElementById('hiddenStatus' + id);
+                hiddenStatus.setAttribute("value", "CreateNew");
+            }
+
+            fileReader.readAsDataURL(file);
+        }
+
+        function AddImageToNewImageSlot(evt, id) {
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var files = evt.target.files;
+            var file = files[0];
+            var fileReader = new FileReader();
+
+            fileReader.onload = function (progressEvent) {
+                var url = fileReader.result;
+                var iconForFile = document.getElementById("addNewImage" + id);
+                iconForFile.src = url;
+            }
+
+            fileReader.readAsDataURL(file);
+        }
+
+        var index = @ViewBag.maxId;
+        function addNewRow() {
+            index++;
+            $('#tableContent').append(
+                '<tr id="tr'+index+'">'
+                + '<td>'
+                + '<img class="slide-image">'
+                + '</td>'
+                + '<td id="slide">'
+                + '<img id="changeImage' + index + '" class="slide-image-change" />'
+                + '<input id="hiddenStatus'+index+'" name="StatusCreateNew" type="hidden" value="CreateNew">'
+                + '</td>'
+                + '<td>'
+                + '<div class="action-slider">'
+                + '<button class="buttonEditSlider">Xóa</button>'
+                + '<input type="file" id="myFile" name="NewImage" onchange="AddImageToCreateNewImageSlot(event,' + index + ')">'
+                + '</div>'
+                + '</td>'
+                + '</tr>'
+            );
+        }
+
+
+        function displayFileToDivInput(e) {
+            hideBtnInput(idBtnInputCount);
+        }
+
+        function deleteSlide(id) {
+            var imageToDelete = document.getElementById('slide' + id);
+            imageToDelete.style.opacity = "0.5";
+            document.getElementById('btnDeleteSlideShow' + id).setAttribute('hidden', "hidden");
+            document.getElementById('btnRecycleSlideShow' + id).removeAttribute('hidden');
+        }
+
+        function recycleSlide(id) {
+            var imageToDelete = document.getElementById('slide' + id);
+            imageToDelete.style.opacity = "1";
+            document.getElementById('btnDeleteSlideShow' + id).removeAttribute('hidden');
+            document.getElementById('btnRecycleSlideShow' + id).setAttribute('hidden', 'hidden');
+        }
+    </script>
+}

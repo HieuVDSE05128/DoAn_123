@@ -1,0 +1,307 @@
+﻿@model PR3M.Models.MaterialsFullControllViewModels
+@using PR3M.DBModel
+@using PR3M.Common
+@{
+    ViewBag.Title = "Index";
+}
+@section PrivateCss{
+    <link rel="stylesheet" href="~/Content/Css/PRMain.css" />
+    <style>
+        .uploadFile {
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 16rem;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, .4);
+        }
+
+        .displayNone {
+            display: none;
+        }
+    </style>
+}
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+@section TextHeaderTopBefore{
+    <div class="text-header-top"><a href="/Menu">Quay về trang menu</a></div>
+}
+@section TextHeaderTopAfter{
+    <div class="text-header-top">
+        @Html.ActionLink("Đăng xuất", "Account");
+    </div>
+}
+<section class="body-section">
+    <div class="action">
+        <div class="btn btn-success btn-lg su"><i class="fa fa-folder" aria-hidden="true"></i>&ensp;Tạo folder mới </div>
+        <div class="btn btn-success btn-lg" onclick="displayModalInputFile()"><i class="fa fa-upload" aria-hidden="true"></i>&ensp;Tải tệp lên</div>
+        <div id="uploadFolder" class="btn btn-success btn-lg"><i class="fa fa-upload" aria-hidden="true"></i></div>
+    </div>
+    <div class="threat1">
+        <a>Folder:</a>
+        @foreach (PR3M.Models.FolderLinkViewModels flvm in CommonOutput.GetListLinkFolder(Model.CurrentFolder.FolderId))
+        {
+            @Html.ActionLink(flvm.FolderName+" > ", "Index", new { @FolderId = flvm.FolderId})
+        }
+        
+    </div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <strong>@TempData["SuccessMessage"].ToString()</strong>
+        </div>
+    }
+    else if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <strong>@TempData["ErrorMessage"].ToString()</strong>
+        </div>
+    }
+</section>
+<!-- Modal Create file -->
+<div class="bisu">
+    <div class="modal-content-bisu">
+        <span class="close-modal">&times;</span>
+        @using (Html.BeginForm("CreateFolder", "PRMain", FormMethod.Post, new { @class = "form-inline" }))
+        {
+            <label for="email">Tên folder mới: </label>
+            <input type="text" name="folderNameInput" placeholder="Enter name" />
+            <button type="submit" class="accept" name="currentFolderId" value="@Model.CurrentFolder.FolderId">Đồng ý</button>
+        }
+    </div>
+</div>
+<!-- Modal upload files -->
+<div class="uploadFile displayNone" id="modalInputFile">
+    <div class="modal-content-bisu">
+        <span class="close-modal">&times;</span>
+        @using (Html.BeginForm("UploadFile", "PRMain", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
+        {
+            <label for="email">Tải file mới: </label>
+            <input type="file" name="fileInput" id="fileInput" multiple />
+            <input type="hidden" name="currentFolderId" value="@Model.CurrentFolder.FolderId" />
+            <button type="submit" class="accept">Đồng ý</button>
+        }
+    </div>
+</div>
+<section class="body-section">
+    <div class="file-zone">
+        @if (Model.CurrentFolder.ParrentId != 0)
+        {
+            <div class="file-data">
+                <i class="fa fa-folder" aria-hidden="true" style="margin: 20px 15px"></i>
+                <p>@Html.ActionLink("...", "Index", "PRMain", new { folderId = Model.CurrentFolder.ParrentId }, new { @class = "newfile", }) </p>
+            </div>
+        }
+        @foreach (Folder f in Model.FoldersInside)
+        {
+            <div class="file-data">
+                <i class="fa fa-folder" aria-hidden="true" style="margin: 20px 15px"></i>
+                <p>@Html.ActionLink(@f.FolderName, "Index", "PRMain", new { folderId = f.FolderId }, new { @class = "newfile", }) </p>
+                <button class="close-button deleteButton" value="@f.FolderId" onclick="SetDeleteFolder(this.value)">&times;</button>
+            </div>
+        }
+    </div>
+</section>
+<section>
+    <div id="container">
+        <div id="myBtnContainer">
+            <div class="bton active" onclick="filterSelection('all')"> Show all</div>
+            <div class="bton" onclick="filterSelection('Folder')">Document</div>
+            <div class="bton" onclick="filterSelection('Image')">Image</div>
+            <div class="bton" onclick="filterSelection('Video')">Video</div>
+        </div>
+        <div class="buttons">
+            <button class="grid btn btn-info btn-lg"><i class="fa fa-th" aria-hidden="true"></i>&ensp;Grid View</button>
+            <button class="list btn btn-info btn-lg"><i class="fa fa-list" aria-hidden="true"></i>&ensp;List View</button>
+        </div>
+        <div class="checkbox-file">
+            <form action="/action_page.php" class="checkbox-file-form">
+                <input type="submit" value="Search" class="search-button">
+                <input type="search" id="gsearch" name="gsearch">
+            </form>
+            <form class="checkbox-file-form">
+                @Html.CheckBox("hiddenview", true, new { @id = "hiddenview" })
+                <label for="hiddenview">view hidden</label><br>
+            </form>
+        </div>
+        <div class="grid ul">
+            @foreach (PR3M.DBModel.FileInDB m in Model.CurrentFolder.FileInDBs.OrderByDescending(p => p.LaunchedDate))
+            {
+                string filterType = "";
+                int typeOfMine = CommonOutput.typeOfMIME(m.MIMEType);
+                if (typeOfMine == 1) { filterType = "Image li"; }
+                else if (typeOfMine == 2) { filterType = "Video li"; }
+                else if (typeOfMine == 3) { filterType = "Folder li"; }
+                <div id="materials[@m.FileId]" class="filterDiv @filterType">
+                    <div class="gallery">
+                        @if (typeOfMine == 1)
+                        {
+                            <a target="_blank" href="~/@(CommonOutput.GetFullPathOfFile(m.FileId))" class="image-gallery">
+                                <img src="~/@(CommonOutput.GetFullPathOfFile(m.FileId))" alt="Cinque Terre">
+                            </a>
+                        }
+                        else if (typeOfMine == 2)
+                        {
+                            <video controls>
+                                <source src="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.FileId)" type="@CommonOutput.RtnVideoControlType(m.MIMEType)">
+                                @*<source src="Videos/movie.ogv" type="video/ogg">*@
+                                Your browser does not support HTML5 video.
+                            </video>
+                        }
+                        else //if (typeOfMine == 3)
+                        {
+                            <a target="_blank" href="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.FileId)" class="image-gallery">
+                                <img src="~/Content/Image/file.png" alt="Cinque Terre">
+                            </a>
+                        }
+                            <div class="infor-gallery">
+                                <div class="desc">@(m.FileName + "." + m.MIMEType)</div>
+                                <div class="name-action-file">
+                                    <div>
+                                        <i class="fa fa-user" aria-hidden="true" style="padding: 0px;margin: 0px 1px"></i>&ensp;@m.User.FullName
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-calendar" aria-hidden="true" style="padding: 0px;margin: 0px 1px"></i>&ensp;@m.LaunchedDate
+                                    </div>
+                                </div>
+                                <div class="group">
+                                    <button type="submit" class="btn btn-success" onclick="location.href='@Url.Action("Download","PRMain",new { MaterialsId = m.FileId })'">Download</button>
+                                    <button type="button" class="btn btn-success" onclick="document.getElementById('id01').style.display='block'">Delete</button>
+                                    <button type="button" class="btn btn-success heo" onclick="location.href='@Url.Action("EditMaterials","PRMain",new { MaterialsId = m.FileId })'">Edit</button>
+                                    @if (m.IsHide)
+                                    {
+                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">UnHide</button>*@
+                                        <a href="#" class="btn-active" data-id="@m.FileId">UnHide</a>
+
+                                    }
+                                    else
+                                    {
+                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">Hidden</button>*@
+                                        <a href="#" class="btn-active" data-id="@m.FileId">Hide</a>
+                                    }
+                                </div>
+                                <div class="group">
+                                    <button type="submit" class="btn btn-success" onclick="location.href='@Url.Action("Download","PRMain",new { MaterialsId = m.FileId })'">Check MD5</button>
+                                    <button type="button" class="btn btn-success" onclick="document.getElementById('id01').style.display='block'">Delete</button>
+                                    <button type="button" class="btn btn-success heo" onclick="location.href='@Url.Action("EditMaterials","PRMain",new { MaterialsId = m.FileId })'">Edit</button>
+                                    @if (m.IsHide)
+                                    {
+                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">UnHide</button>*@
+                                        <a href="#" class="btn-active" data-id="@m.FileId">UnHide</a>
+
+                                    }
+                                    else
+                                    {
+                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">Hidden</button>*@
+                                        <a href="#" class="btn-active" data-id="@m.FileId">Hide</a>
+                                    }
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+@*<div id="id01" class="modal">
+        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+        <form class="modal-content" action="/action_page.php">
+            <div class="container">
+                <h1>Delete Document</h1>
+                <div class="question">Are you sure you want to delete your document?</div>
+                <div class="clearfix">
+                    <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                    <button type="button" onclick="document.getElementById('id01').style.display='none'" class="deletebtn">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="trang">
+        <div class="modal-content-trang">
+            <span class="close-modal">&times;</span>
+            <form class="form-inline" action="/action_page.php">
+                <label for="email">Sửa tên tệp tin</label>
+                <input type="text" placeholder="Enter name">
+                <button type="submit" class="accept">Đồng ý</button>
+            </form>
+        </div>
+    </div>
+    <div class="confirmDelete" id="deleteModal">
+        <div class="modal-content-trang">
+            <span class="close-modal">&times;</span>
+            <h3>Xác nhận xóa folder <span id="folderName"></span>?</h3>
+            <div style="height: 70px"></div>
+            <div class="text-center">
+                <button class="btn btn-success" id="deleteBtn" value="">Đồng ý</button>
+                <button class="btn btn-danger" onclick="document.getElementById('deleteModal').style.display='none'">Hủy bỏ</button>
+            </div>
+            <br />
+        </div>
+    </div>
+    <div class="message">
+        <div class="modal-content-trang text-center">
+            <img alt="success" src="~/Content/Image/success-icon-23187.png" width="100" height="100" />
+            <h3 class="success-message text-center">Xoá folder thành công!</h3>
+        </div>
+    </div>*@
+@section scripts{
+    <script src="~/Scripts/JS/Account.js"></script>
+    <script src="~/Scripts/JS/PRMainController.js"></script>
+    <script src="~/Scripts/jquery.uploadfile.js"></script>
+    <script>
+
+        function displayModalInputFile() {
+            $('#modalInputFile').removeClass('displayNone');
+
+        }
+
+        $(document).ready(function () {
+            $("#uploadFolder").uploadFile({
+                url: "/PRMain/UploadFolder",
+                fileName: "uploadFolder",
+                afterUploadAll: function (obj) {
+                    window.location.href = "/PRMain/Index?FolderId=" + @Model.CurrentFolder.FolderId;
+                }
+            });
+        });
+
+        function SetDeleteFolder(value) {
+            $('#folderName').html("");
+            $.ajax({
+                url: "/PRMain/GetFolderName",
+                data: { folderId: value },
+                success: function(data) {
+                    $('#folderName').html('<b>' + data + '</b>');
+                    $('#deleteBtn').val(value);
+                },
+                error: function() {
+                    alert("Error");
+                }
+            });
+        }
+
+        $('#deleteBtn').click(function() {
+            $.ajax({
+                url: "/PRMain/DeleteFolder",
+                data: { folderId: $('#deleteBtn').val() },
+                success: function (data) {
+                    if (data === "success") {
+                        document.getElementById('deleteModal').style.display = 'none';
+                        showMessage("/PRMain/Index?FolderId=" + @Model.CurrentFolder.FolderId);
+                    } else {
+                        alert(data);
+                    }
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        });
+    </script>
+}

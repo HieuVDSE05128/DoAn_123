@@ -1,0 +1,114 @@
+﻿@model PR3M.DBModel.User
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+
+@section PrivateCss{
+    <style>
+        h2 {
+            font-weight: bold;
+            color: orange;
+            font-family: sans-serif;
+        }
+
+        .Delete-Page {
+            padding: 0rem 45px 3rem 45px;
+        }
+
+        h3 {
+            padding: 0rem 0rem 1rem 0rem;
+            color: red;
+        }
+
+        h4 {
+            color: green;
+            font-size: 20px;
+        }
+
+        hr {
+            border: 0px;
+            background-color: orange;
+            height: 2px;
+        }
+
+        a.backPage {
+            text-decoration: none;
+            color: blue;
+            font-size: 14px;
+            font-family: sans-serif;
+        }
+
+        dd {
+            padding: 5px;
+        }
+
+        dt {
+            padding: 5px;
+        }
+    </style>
+}
+@{
+    ViewBag.Title = "Delete";
+}
+<div class="Delete-Page">
+    <h2>Delete</h2>
+
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>Thông tin người dùng :</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.PRSystem.PRSystemName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PRSystem.PRSystemName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Role.RoleName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Role.RoleName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsActive)
+            </dd>
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-danger" /> |
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "backPage" })
+            </div>
+        }
+    </div>
+</div>

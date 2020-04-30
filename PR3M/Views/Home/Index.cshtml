@@ -1,0 +1,418 @@
+﻿@using PR3M.Common
+@model PR3M.Models.HomeViewModels
+@{
+    ViewBag.Title = "Home Page";
+}
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+@section PrivateCss{
+    <link href="~/Content/Css/CssHomePage.css" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .modal-logo-edu {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content-logo-base-education {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0px 20px 20px 20px;
+            border: 1px solid #888;
+            width: 80%;
+            height: 800px;
+            overflow-y: scroll;
+        }
+
+        a.load-file {
+            text-decoration: none;
+            color: #fff;
+            padding: 1rem 3rem;
+            background-color: green;
+        }
+
+        h2.text-center {
+            padding-bottom: 2rem;
+        }
+
+        hr {
+            height: 2px;
+            background-color: orange;
+        }
+
+        .group-image {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .image1 {
+            width: 500px;
+            margin: 10px;
+        }
+
+        img.modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            cursor: pointer;
+        }
+
+        .name-image {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        #style-1::-webkit-scrollbar {
+            width: 6px;
+            background-color: #F5F5F5;
+        }
+
+        #style-1::-webkit-scrollbar-thumb {
+            background-color: #000000;
+        }
+
+        #style-1::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+
+        .container-document {
+            position: relative;
+            width: 285px;
+            margin: auto;
+            padding-bottom: 3rem;
+        }
+
+        .document-file-edu {
+            display: flex;
+        }
+
+        img.image-document {
+            width: 100%;
+        }
+
+        .container .content {
+            position: absolute; /* Position the background text */
+            bottom: 0; /* At the bottom. Use top:0 to append it to the top */
+            background: rgb(0, 0, 0); /* Fallback color */
+            background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+            color: #f1f1f1; /* Grey text */
+            width: 100%; /* Full width */
+            padding: 20px; /* Some padding */
+        }
+
+        .image1 {
+            width: 23%;
+            padding-bottom: 2rem;
+            text-align: center;
+        }
+
+        a.download-document-file {
+            font-size: 15px;
+            text-decoration: none;
+            color: green;
+            font-family: sans-serif;
+            font-weight: bold;
+            border-bottom: 2px solid;
+        }
+
+        .content {
+            text-align: center;
+        }
+
+        .download-section {
+            font-size: 18px;
+            font-family: sans-serif;
+            background-color: orange;
+            color: #fff;
+            padding: 7px 10px;
+            text-align: center;
+            width: 10%;
+            margin: auto;
+            cursor: pointer;
+            margin-bottom: 3rem;
+        }
+
+        a.download-logo-document-education {
+            text-decoration: none;
+            color: #fff;
+            font-size: 20px;
+            background-color: green;
+            padding: 10px 40px;
+        }
+
+        .download-total {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        video.videoOutsideModal {
+            width: 350px;
+            margin-top: 20%;
+            height: 200px;
+        }
+    </style>
+}
+<div class="Slider">
+    <div class="slideshow-container">
+        @foreach (PR3M.DBModel.Slider slide in ViewBag.Slider)
+        {
+            <div class="mySlides fade">
+                <img src="~/Content/Image/Slider/@slide.SliderName" style="width:100%;height: 760px;" class="cover">
+            </div>
+        }
+    </div>
+</div>
+<div class="line-page"></div>
+
+@foreach (var item in Model.Posts.OrderByDescending(p => p.Position))
+{
+
+    <div class="brochure-fpt-edu">
+        <div class="title-brochure">
+            @if (item.PostEngTitle != null && item.PostEngTitle.Length > 0)
+            {
+                <div class="title-brochure-edu">@item.PostTitle/</div>
+                <div class="title-brochure-edu-mini-1">@item.PostEngTitle</div>
+            }
+            else
+            {
+                <div class="title-brochure-edu">@item.PostTitle</div>
+            }
+        </div>
+        <div class="brochure-content">
+            @foreach (var material in item.Materials.Where(m => m.IsDelete != true && m.IsHilde != true))
+            {
+                <div class="image-brochure">
+                    <div class="brochure">
+                        @{
+                            int typeOfMime = CommonOutput.typeOfMIME(material.MIMEType);
+                            if (typeOfMime == 1)
+                            {
+                                <a class="khung" onclick="openPreviewModal('@item.PostHashRealFolder','@(material.MaterialName+"."+material.MIMEType)')">
+                                    <img src="~/Content/Materials/Root/Post/@(item.PostHashRealFolder+"/"+material.MaterialName+"."+material.MIMEType)" class="brochure-image">
+                                </a>
+                            }
+                            else if (typeOfMime == 2)
+                            {
+                                <video controls class="videoOutsideModal">
+                                    <source src="~/Content/Materials/Root/Post/@(item.PostHashRealFolder+"/"+material.MaterialName+"."+material.MIMEType)" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            }
+                            else
+                            {
+                                if (material.ImageAvatar == null || material.ImageAvatar.Trim().Length <= 0)
+                                {
+                                    <a class="khung" onclick="openPreviewModal('@item.PostHashRealFolder','@(material.MaterialName+"."+material.MIMEType)')"><img src="~/Content/Image/Icon/@(material.MIMEType+".png")" class="brochure-image"></a>
+                                }
+                                else
+                                {
+                                    <a class="khung" onclick="openPreviewModal('@item.PostHashRealFolder','@(material.MaterialName+"."+material.MIMEType)')"><img src="~/Content/Materials/Root/Post/@(item.PostHashRealFolder+"/"+material.ImageAvatar)" class="brochure-image"></a>
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="textbrochure"><b>@material.MaterialDisplayName</b></div>
+                    @if (typeOfMime != 2)
+                    {
+                        <div class="text2brochure" onclick="openPreviewModal('@item.PostHashRealFolder','@(material.MaterialName+"."+material.MIMEType)')"><b class="bottom">Xem chi tiết</b></div>
+                    }
+                    else
+                    {
+                        <div class="text2brochure" onclick="openPreviewModalVideo('@item.PostHashRealFolder','@(material.MaterialName+"."+material.MIMEType)','@CommonOutput.RtnVideoControlType('.'+material.MIMEType)')"><b class="bottom">Xem chi tiết</b></div>
+                    }
+                    <div class="text2brochure" onclick="location.href='@Url.Action("Download", "Home", new { MaterialId = material.MaterialId })'"><b class="bottom">Tải về</b></div>
+                </div>
+                <br />
+            }
+        </div>
+    </div>
+    <div class="line-page"></div>
+}
+@*
+    Logo
+*@
+@{
+    <div class="brochure-fpt-edu">
+        <div class="title-brochure">
+            <div class="title-brochure-edu main">HỆ THỐNG LOGO TỔ CHỨC GIÁO DỤC/</div>
+            <div class="title-brochure-edu-mini">FPT Education Logo</div>
+        </div>
+        @{
+            PR3M.DBModel.Post[] folders = Model.LogoPost.ToArray();
+            int size = folders.Count();
+            for (int i = 0; i < size; i++)
+            {
+                int limit = 0;
+                if (i + 3 < size)
+                {
+                    limit = i + 3;
+                    <div class="row-logo">
+                        @for (int j = i; j <= limit; j++)
+                        {
+                            <div class="logo-base-Fedu">
+                                @if (Model.LogoImage[j] == null)
+                                {
+                                    <div class="logo-Fedu"><img src="~/Content/Image/Logo/LogoPL.png" alt="" class="logo-base-fe"></div>
+                                }
+                                else
+                                {
+                                    <div class="logo-Fedu"><img src="~/Content/Materials/Root/Logo/@(folders[j].PostHashRealFolder+"/"+Model.LogoImage[j].Material.MaterialName+"."+Model.LogoImage[j].Material.MIMEType)" alt="" class="logo-base-fe"></div>
+                                }
+                                <div class="name-base-Fedu"><b class="name">@folders[j].PostTitle</b></div>
+                                <div class="download-logo-base-Fedu" onclick="openModal(event, @folders[j].PostId)"><b class="down-load-logo-fedu">Tải về</b></div>
+                            </div>
+                        }
+                    </div>
+                    i = limit;
+                }
+                else
+                {
+                    limit = size - 1;
+                    <div class="row-logo">
+                        @for (int j = i; j <= limit; j++)
+                        {
+                            <div class="logo-base-Fedu">
+                                @if (Model.LogoImage[j] == null)
+                                {
+                                    <div class="logo-Fedu"><img src="~/Content/Image/Logo/LogoPL.png" alt="" class="logo-base-fe"></div>
+                                }
+                                else
+                                {
+                                    <div class="logo-Fedu"><img src="~/Content/Materials/Root/Logo/@(folders[j].PostHashRealFolder+"/"+Model.LogoImage[j].Material.MaterialName+"."+Model.LogoImage[j].Material.MIMEType)" alt="" class="logo-base-fe"></div>
+                                }
+                                <div class="name-base-Fedu"><b class="name">@folders[j].PostTitle</b></div>
+                                <div class="download-logo-base-Fedu" onclick="openModal(event, @folders[j].PostId)"><b class="down-load-logo-fedu">Tải về</b></div>
+                            </div>
+                            i++;
+                        }
+                    </div>
+                }
+            }
+        }
+    </div>
+}
+<div id="Modal-base-education" class="modal-logo-edu">
+    <div class="modal-content-logo-base-education" id="style-1">
+
+        <div id="modal-content"></div>
+    </div>
+</div>
+<div id="previewModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close1" id="previewCloseModal">&times;</span>
+        <iframe id="previewIFrame" src="" width="100%" height="780"></iframe>
+    </div>
+    <!-- Modal content -->
+</div>
+
+<div id="previewModalVideo" class="modal-video">
+    <!-- Modal content -->
+    <div class="modal-content-video">
+        <span class="close6" id="previewCloseModal-video">&times;</span>
+        <video controls class="video-modalDisplay" id="previewVideo-video">
+            <source src="" type="">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <!-- Modal content -->
+</div>
+
+@*~/Content/Materials/Root/WVLPDLINDYOYAXQPOEWFGGAAVNXGXNWRFRIORJVSOVRMUBBUQGTKBKNPVLTPMCOP/1.pdf*@
+@section scripts{
+    <script src="~/Scripts/JS/Home.js"></script>
+    <script type="text/javascript">
+        function openPreviewModal(fullPathOfFile, fileName) {
+            var modal = document.getElementById("previewModal");
+            var span = document.getElementById("previewCloseModal");
+            modal.style.display = "block";
+            var iframe = document.getElementById("previewIFrame");
+            iframe.src = "../Content/Materials/Root/Post/" + fullPathOfFile + "/" + fileName;
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        function openPreviewModalVideo(fullPathOfFile, fileName, typeOfVideoControl) {
+            var modal = document.getElementById("previewModalVideo");
+            var span = document.getElementById("previewCloseModal-video");
+            modal.style.display = "block";
+            var vid = document.getElementById("previewVideo-video");
+            vid.src = "../Content/Materials/Root/Post/" + fullPathOfFile + "/" + fileName;
+            vid.type = typeOfVideoControl;
+            span.onclick = function () {
+                modal.style.display = "none";
+                vid.src = '';
+            }
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    vid.src = '';
+                }
+            }
+        }
+
+        /*Use Modal to display all file in logo folder*/
+        var modal = document.getElementById("Modal-base-education");
+        function openModal(e, id) {
+            e.preventDefault();
+            $.ajax({
+                url: "/Home/LoadContentModal",
+                data: { id: id },
+                type: "GET",
+                success: function (data) {
+                    $("#modal-content").html(data);
+                },
+                error: function (message) {
+                    alert(message);
+                }
+            });
+            modal.style.display = "block";
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        /* slide show */
+        var slideIndex = 0;
+        showSlides();
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1 }
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, @(ViewBag.TimeChangeSlide*1000)); // Change image every 2 seconds
+            /* slide show */
+        }
+
+
+
+    </script>
+}

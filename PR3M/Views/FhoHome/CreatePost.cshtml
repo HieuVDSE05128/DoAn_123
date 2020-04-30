@@ -1,0 +1,361 @@
+﻿@model PR3M.Models.PostCreateViewModels
+
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+@section PrivateCss{
+    <style>
+        .modal-insert-prsystem {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content-logo-base-education {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 45px;
+            border: 1px solid #888;
+            width: 70%;
+        }
+
+        .btn-uploadFile {
+            margin-bottom: 0.5rem;
+            padding: 3px 16px;
+            font-size: 18px;
+            line-height: 1.3333333;
+            border-radius: 6px;
+            color: #fff;
+            background-color: #5cb1b8;
+            border-color: #4cae4c;
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            background-image: none;
+            border: 1px solid transparent;
+        }
+
+        .div-btn-createPrsystem {
+            padding-top: 5px;
+            cursor: pointer;
+        }
+
+            .div-btn-createPrsystem p:hover {
+                color: orange;
+            }
+
+        .div-input-file {
+            border: 1px solid black;
+            border-radius: 5px;
+            height: 0px;
+            margin-bottom: 2rem;
+        }
+
+        .div-oneLine-fileInput {
+            display: flex;
+            width: 100%;
+        }
+
+        .div-file-input-toSystem {
+            width: 23%;
+            margin: 1%;
+            height: 250px;
+            border: 1px solid orange;
+            border-radius: 5px;
+        }
+
+        .active {
+            border: 2px solid orange;
+        }
+
+        .hide-input-file {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+            .hide-input-file + label {
+                font-size: 1.25em;
+                font-weight: 700;
+            }
+
+                .hide-input-file:focus + label,
+                .hide-input-file + label:hover {
+                }
+
+        .img-in-labelFileImage {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .label-in-inputFile {
+            width: 100%;
+            height: 70%;
+        }
+
+        .CreatePosst-Page {
+            padding: 0rem 45px 5rem 45px;
+        }
+
+        .page-edit {
+            padding: 0rem 45px 3rem 45px;
+        }
+
+        h2 {
+            font-weight: bold;
+            color: orange;
+            font-family: sans-serif;
+        }
+
+        .Delete-Page {
+            padding: 0rem 45px 3rem 45px;
+        }
+
+        h3 {
+            padding: 0rem 0rem 1rem 0rem;
+            color: red;
+        }
+
+        h4 {
+            color: green;
+            font-size: 20px;
+        }
+
+        hr {
+            border: 0px;
+            background-color: orange;
+            height: 2px;
+        }
+
+        a.backPage {
+            text-decoration: none;
+            color: blue;
+            font-size: 16px;
+            font-family: sans-serif;
+        }
+
+        dd {
+            padding: 5px;
+        }
+
+        dt {
+            padding: 5px;
+        }
+
+        .col-md-10 {
+            width: 20%;
+        }
+
+        .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
+            position: absolute;
+            margin-top: 4px\9;
+            margin-left: 0px;
+        }
+
+        .btn-uploadFile {
+            margin-bottom: 0.5rem;
+            padding: 3px 16px;
+            font-size: 18px;
+            line-height: 1.3333333;
+            border-radius: 6px;
+            color: #fff;
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            background-image: none;
+            border: 1px solid transparent;
+        }
+
+        i.fa.fa-folder {
+            margin: 10px;
+        }
+
+        input#PRSystemVName, input#PRSystemName {
+            width: 200%;
+        }
+    </style>
+}
+<div id="modal-insert-prsystem" class="modal-insert-prsystem">
+    <div class="modal-content-logo-base-education" id="style-1">
+        <div id="modal-content"></div>
+    </div>
+</div>
+<div class="CreatePosst-Page">
+    <h2>Create new post</h2>
+
+    @using (Html.BeginForm("CreatePost", "FhoHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Please fill information below</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.PostTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PostTitle, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PostTitle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PostEngTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PostEngTitle, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PostEngTitle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.PRSystemId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("PRSystemId", null, "Select PRSystemId", new { @class = "form-control" })
+                        <div onclick="openModal(event)" class="div-btn-createPrsystem"><p>Thêm đơn vị mới</p></div>
+                        @Html.ValidationMessageFor(model => model.PRSystemId, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-success" />
+                </div>
+            </div>
+            <br />
+            <div class="btn-uploadFile" id="div-uploadFile">
+                <i class="fa fa-folder" aria-hidden="true"></i><label id="btn-uploadFile0"><input class="hide-input-file" type="file" onchange="displayFileToDivInput(event)" name="fileInputReal" id="fileInput0" multiple="multiple" />Choose a file</label>
+            </div>
+            <br />
+            <br />
+            <div class="div-input-file" id="dropSection">
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Quay lại", "Index", null, new { @class = "backPage" })
+    </div>
+
+</div>
+
+@section scripts{
+    <script src="~/Scripts/JS/filedrop.js"></script>
+    <script>
+        var modal = document.getElementById("modal-insert-prsystem");
+        function openModal(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/FhoHome/LoadContentModalInsertPRSystem",
+                data: { rtnLink : "CreatePost" },
+                type: "GET",
+                success: function (data) {
+                    $("#modal-content").html(data);
+                },
+                error: function (message) {
+                    alert(message);
+                }
+            });
+            modal.style.display = "block";
+        }
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        var inputCount = 0;
+        var index = 0;
+        var divNewLine = $('<div class="div-file-input-toSystem"></div>');
+        function displayFileToDivInput(e) {
+            var files = e.target.files;
+            for (var i = 0, file; file = files[i]; i++) {
+                //Handle file data before set to input file
+                var fileName = files[i].name;
+                var extension = fileName.replace(/^.*\./, '');
+                var size = files[i].size;
+                if (index % 4 == 0) {
+                    //Get div input section -> divInput
+                    $divInput = $('#dropSection');
+                    //Increase the height of div input file
+                    var height = $divInput.height();
+                    $divInput.height(height + 300)
+                    //append new label and input file into div oneLine
+                    $label = $('<label class="label-in-inputFile" />');
+                    $img = $('<img class="img-in-labelFileImage" src="/Content/Image/Icon/' + extension + '.png"/>');
+                    //$input = $('<input type="file" name="fileInput" class="hide-input-file" id="file-input-in-divInput' + index + '" />');
+                    $divNewLine = $('<div class="div-oneLine-fileInput"></div>');
+                    $divFileInputToSystem = $('<div class="div-file-input-toSystem">')
+                    $label.append($img);
+                    //$label.append($input);
+                    $divFileInputToSystem.append($label);
+                    //append div caption and div size input into div oneLine
+                    $divCaptionInput = $('<div>Caption: <input type="text" class="name-file-input" value="' + fileName + '" name="displayNameFileInput" /></div>');
+                    $divSizeInput = $('<div>Size: ' + size + '</div>');
+                    $divFileInputToSystem.append($divCaptionInput);
+                    $divFileInputToSystem.append($divSizeInput);
+                    //append div oneLine into divInput
+                    $divNewLine.append($divFileInputToSystem);
+                    $divInput.append($divNewLine);
+                    divNewLine = $divNewLine;
+                    index = index + 1;
+                } else {
+                    //Get div input section -> divInput
+                    $divInput = $('#dropSection');
+                    //append new label and input file into div oneLine
+                    $label = $('<label class="label-in-inputFile" />');
+                    $img = $('<img class="img-in-labelFileImage" src="/Content/Image/Icon/' + extension + '.png"/>');
+                    //$input = $('<input type="file" name="fileInput" class="hide-input-file" id="file-input-in-divInput' + index + '" />');
+                    $divFileInputToSystem = $('<div class="div-file-input-toSystem">')
+                    $label.append($img);
+                    //$label.append($input);
+                    $divFileInputToSystem.append($label);
+                    //append div caption and div size input into div oneLine
+                    $divCaptionInput = $('<div>Caption: <input type="text" class="name-file-input" value="' + fileName + '" name="displayNameFileInput" /></div>');
+                    $divSizeInput = $('<div>Size: ' + size + '</div>');
+                    $divFileInputToSystem.append($divCaptionInput);
+                    $divFileInputToSystem.append($divSizeInput);
+                    //append div oneLine into divInput
+                    divNewLine.append($divFileInputToSystem);
+                    $divInput.append($divNewLine);
+                    divNewLine = $divNewLine;
+                    index = index + 1;
+                }
+
+            }
+            hideThis(inputCount);
+                //$('input[id = "fileInput"]').val('');
+        }
+
+
+        function hideThis(idToHide) {
+            $inputToHide = $('#btn-uploadFile' + idToHide);
+            inputCount = inputCount + 1;
+            $inputToHide.hide();
+            $("#div-uploadFile").append('<label id="btn-uploadFile' + inputCount + '" ><input class="hide-input-file" onclick="hideThis(' + inputCount + ')" onchange="displayFileToDivInput(event)" type="file" name="fileInputReal" id="fileInput' + inputCount + '"  multiple="multiple" />Choose a file</label>');
+        }
+
+
+    </script>
+}

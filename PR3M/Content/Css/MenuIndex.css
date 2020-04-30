@@ -1,0 +1,60 @@
+﻿.menu-function {
+    padding: 20rem 5rem 3rem 5rem;
+}
+
+h1 {
+    text-align: center;
+}
+
+.name-screen {
+    display: flex;
+    width: 100%;
+    padding: 3rem 45rem;
+}
+
+.left {
+    width: 50%;
+}
+
+.right {
+    width: 50%;
+}
+
+.home-brochure {
+    text-align: center;
+}
+
+.account-inside {
+    text-align: center;
+}
+
+li.item-function {
+    font-size: 18px;
+    font-family: sans-serif;
+    margin: 0.5rem;
+}
+
+ul.function {
+    margin-top: 2rem;
+}
+
+li.item-function a {
+    text-decoration: none;
+    color: black;
+}
+
+b.title-function {
+    border-bottom: 2px solid;
+    background-color: orange;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+    width: 50%;
+    text-align: center;
+    justify-content: center;
+    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}

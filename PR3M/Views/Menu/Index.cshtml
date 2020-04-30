@@ -1,0 +1,122 @@
+﻿
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+@section PrivateCss{
+    <style>
+        .menu-function {
+            display: flex;
+            width: 100%;
+            margin: auto;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .threat {
+            width: 25%;
+            height: 100px;
+            margin: 0rem 2rem 0rem 2rem;
+            text-align: center;
+        }
+
+        fieldset {
+            border: 1px solid #00000052;
+            margin: 0 2px;
+            box-shadow: 0px 0px 8px 0px #888888;
+            border-radius: 5px;
+            color: black;
+            height: 240px;
+        }
+
+        h2 {
+            margin: 30px 0 30px 0;
+            text-align: center;
+        }
+
+        legend {
+            display: block;
+            width: 200%;
+            padding: 5px 25px 5px 25px;
+            margin-bottom: 20px;
+            font-size: 21px;
+            font-family: sans-serif;
+            line-height: inherit;
+            color: #fff;
+            border: 0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-image: linear-gradient(orange, #ef8d01);
+        }
+
+        ul.list-function {
+            padding-inline-start: 0;
+            list-style-type: none;
+            text-align: center;
+        }
+
+        a.function-name {
+            text-decoration: none;
+            color: black;
+            font-family: sans-serif;
+            font-size: 18px;
+        }
+
+            a.function-name :hover {
+                background-color: orange;
+            }
+
+        .menu-user {
+            height: 440px;
+            padding: 0px 45px 0px 45px;
+        }
+        fieldset {
+            border: 1px solid #00000052;
+            margin: 0 2px;
+            box-shadow: 0px 0px 8px 0px #888888;
+            border-radius: 5px;
+            padding: 1.35rem 12.625rem 1.75rem;
+            color: black;
+            height: 250px;
+        }
+    </style>
+}
+@section TextHeaderTopAfter{
+    <div class="text-header-top">
+        @Html.ActionLink("Đăng xuất", "LogOut", "Account");
+    </div>
+}
+<div class="menu-user">
+    <h2>Danh mục chức năng của hệ thống quản lý thương hiệu FPT</h2>
+    <div class="menu-function">
+        <div class="threat">
+            <fieldset>
+                <legend>Quản lý tài nguyên thương hiệu</legend>
+                <ul class="list-function">
+                    <li class="function">@Html.ActionLink("Quản lý trang chủ", "Index", "FhoHome", null, new { @class = "function-name" })</li>
+                    <li class="function">@Html.ActionLink("Thêm bài viết mới", "CreatePost", "FhoHome", null, new { @class = "function-name" })</li>
+                    <li class="function">@Html.ActionLink("Quản lý tài nguyên theo dạng thư mục", "Index", "PRMain", null, new { @class = "function-name" })</li>
+                </ul>
+            </fieldset>
+        </div>
+        <div class="threat">
+            <fieldset>
+                <legend>Quản lý người dùng</legend>
+                <ul class="list-function">
+                    <li class="function">@Html.ActionLink("Xem danh sách người dùng", "Index", "Users", null, new { @class = "function-name" })</li>
+                    <li class="function">@Html.ActionLink("Thêm người dùng mới", "Create", "Users", null, new { @class = "function-name" })</li>
+                </ul>
+            </fieldset>
+        </div>
+        <div class="threat">
+            <fieldset>
+                <legend>Dành cho PRAdmin</legend>
+                <ul class="list-function">
+                    <li class="function">@Html.ActionLink("Phê duyệt bài viết", "Create", "Users", null, new { @class = "function-name" })</li>
+                    <li class="function">@Html.ActionLink("Xem lịch sử", "Index", "LogActions", null, new { @class = "function-name" })</li>
+                    <li class="function">@Html.ActionLink("Kiểm tra tài nguyên", "CheckFile", "FhoHome", null, new { @class = "function-name" })</li>
+                </ul>
+            </fieldset>
+        </div>      
+    </div>
+</div>

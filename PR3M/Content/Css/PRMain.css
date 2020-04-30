@@ -1,0 +1,578 @@
+/*Back to top*/
+.back-to-top {
+    width: 50px;
+    height: 50px;
+    background: #ff7600fa;
+    font-size: 35px;
+    color: whitesmoke;
+    text-align: center;
+    vertical-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    margin-left: -25px;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+}
+
+    .back-to-top.hien-ra {
+        visibility: visible;
+        opacity: 1;
+    }
+/*Back to top*/
+
+
+.body-section {
+    padding: 2rem 10rem;
+}
+
+ul.list {
+    list-style: none;
+    font-size: 20px;
+}
+
+.action {
+    padding-top: 3rem;
+}
+
+.threat1 a {
+    text-decoration: none;
+    color: orange;
+    font-size: 3.5rem;
+}
+
+    .threat1 a:hover {
+        color: lawngreen;
+    }
+
+.btn {
+    margin-bottom: 0.5rem;
+}
+
+.desc {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    margin: 0;
+    line-height: 70px;
+}
+
+.checkbox-file {
+    padding: 0rem 11rem;
+}
+
+input#gsearch {
+    width: 15%;
+}
+
+.checkbox-file-form {
+    padding-bottom: 1rem;
+}
+/*Modal create file*/
+.bisu {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 16rem;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, .4);
+}
+
+.modal-content-bisu {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+
+.close-modal {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close-modal:hover,
+    .close-modal:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+/*Form create file in modal create file*/
+.form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+    .form-inline label {
+        margin: 5px 10px 5px 0;
+    }
+
+    .form-inline input {
+        vertical-align: middle;
+        margin: 5px 10px 5px 0;
+        padding: 10px;
+        width: 80%;
+        background-color: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .form-inline .accept {
+        padding: 10px 20px;
+        background-color: dodgerblue;
+        border: 1px solid #ddd;
+        color: white;
+        cursor: pointer;
+    }
+
+        .form-inline .accept:hover {
+            background-color: royalblue;
+        }
+
+@media (max-width: 1024px) {
+    .body-section {
+        padding: 2rem 7rem;
+    }
+}
+
+@media (max-width: 800px) {
+    .form-inline input {
+        margin: 10px 0;
+    }
+
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 500px) {
+    .modal-content-bisu {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 65%;
+    }
+}
+/*Form create file in modal create file*/
+/*Modal create file*/
+
+
+/*Modal change file name*/
+.trang {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 16rem;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, .4);
+}
+
+.modal-content-trang {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px 20px 0px 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+
+.close-modal {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close-modal:hover,
+    .close-modal:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+/*Form change file name in modal change file name*/
+.form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+    .form-inline label {
+        margin: 5px 10px 5px 0;
+    }
+
+    .form-inline input {
+        vertical-align: middle;
+        margin: 5px 10px 5px 0;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .form-inline button {
+        padding: 10px 20px;
+        background-color: dodgerblue;
+        border: 1px solid #ddd;
+        color: white;
+        cursor: pointer;
+    }
+
+        .form-inline button:hover {
+            background-color: royalblue;
+        }
+
+@media (max-width: 800px) {
+    .form-inline input {
+        margin: 10px 0;
+    }
+
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 500px) {
+    .modal-content-bisu {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 65%;
+    }
+}
+/*Form change file name in modal change file name*/
+/*Modal change file name*/
+
+
+/*File folder*/
+.file-zone {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.close-modal-file {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: -9px;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+.file-data {
+    background-color: #80808042;
+    margin: 5px;
+    width: 233px;
+    border-radius: 10px;
+    display: flex;
+    border: 1px solid black;
+}
+
+a.newfile {
+    color: black;
+    text-decoration: none;
+}
+
+p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 150px;
+    margin: 0;
+    line-height: 70px;
+}
+/*File folder*/
+
+
+/* Css of grid view list */
+div#container {
+    padding-bottom: 5rem;
+}
+
+.grid.ul {
+    padding: 0rem 8rem;
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.ul.list {
+    padding: 0rem 9rem;
+}
+
+.li {
+    width: 25%;
+    padding: 20px;
+}
+
+#container .buttons {
+    padding: 2rem 11rem;
+}
+
+#container .list .li {
+    width: 100%;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    height: 200px;
+}
+
+    #container .list .li .gallery {
+        margin: 5px;
+        border: 1px solid #ccc;
+        height: 100%;
+        width: 100%;
+        display: flex;
+    }
+
+        #container .list .li .gallery video {
+            width: 100%;
+            height: 100%;
+            margin-right: 3rem;
+        }
+
+        #container .list .li .gallery a {
+            width: 18%;
+            margin-right: 3rem;
+        }
+
+            #container .list .li .gallery a img {
+                width: 100%;
+                height: 100%;
+            }
+
+        #container .list .li .gallery .infor-gallery {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            padding-top: 7rem;
+            justify-content: center;
+        }
+
+            #container .list .li .gallery .infor-gallery .desc {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                margin: 0;
+                width: 28%;
+                line-height: 30px;
+            }
+
+            #container .list .li .gallery .infor-gallery .name-action-file {
+                margin-bottom: 2rem;
+                color: black;
+                margin-right: 30rem;
+            }
+
+        #container .list .li .gallery .image-gallery-show {
+            width: 25%;
+            height: auto;
+        }
+
+div.gallery {
+    margin: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+    div.gallery:hover {
+        border: 1px solid #777;
+    }
+
+    div.gallery img {
+        width: 393px;
+        height: 229px;
+        object-fit: contain;
+    }
+
+.image-gallery-show {
+    width: 100%;
+    height: 266px;
+}
+
+video {
+    width: 393px;
+    height: 229px;
+}
+
+div.desc {
+    padding: 5px 20px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.name-action-file {
+    margin-bottom: 3rem;
+    transform: translateX(25%);
+}
+
+.group {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.search {
+    padding: 1rem 0rem;
+    padding-left: 97rem;
+}
+
+input.search-button {
+    width: 5%;
+    background-color: orange;
+    border: 0;
+    height: 24px;
+    color: #fff;
+}
+/* Css of grid view list */
+
+
+/* filter */
+div#myBtnContainer {
+    text-align: center;
+    display: flex;
+    width: 55%;
+    padding: 1rem 11rem;
+}
+
+.filterDiv {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.bton {
+    border: none;
+    outline: none;
+    padding: 15px 30px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+    .bton:hover {
+        background-color: #ddd;
+    }
+
+    .bton.active {
+        background-color: #666;
+        color: white;
+    }
+/* filter */
+
+
+/*Delete File*/
+.cancelbtn,
+.deletebtn,
+.accept {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.cancelbtn,
+.deletebtn,
+.accept {
+    opacity: 1;
+}
+
+.cancelbtn, .deletebtn {
+    float: left;
+    width: 50%;
+}
+
+.cancelbtn {
+    background-color: #ccc;
+    color: black;
+}
+
+.deletebtn {
+    background-color: #f44336;
+}
+
+.container {
+    padding: 16px;
+    text-align: center;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 15rem;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #474e5d;
+    padding-top: 50px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+.close {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #f1f1f1;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #f44336;
+        cursor: pointer;
+    }
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+@media screen and (max-width: 300px) {
+    .cancelbtn, .deletebtn {
+        width: 100%;
+    }
+}
+/*Delete File*/
+i.fa.fa-folder {
+    font-size: 28px;
+}

@@ -1,0 +1,25 @@
+﻿@using CaptchaMvc.HtmlHelpers
+@{
+    ViewBag.Title = "Captcha";
+}
+
+<div align="center">
+    @using (Html.BeginForm("Captcha", "Account", FormMethod.Post))
+    {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <h1><strong>Kiểm tra giả mạo</strong></h1>
+
+        @Html.MathCaptcha()
+
+        @*@Html.Captcha(3)*@
+
+        <br />
+        <p style="color:red">  @ViewBag.ErrMessage </p>
+
+        <p>
+            <input type="submit" value="Xác nhận" />
+        </p>
+    </fieldset>
+    }
+</div>

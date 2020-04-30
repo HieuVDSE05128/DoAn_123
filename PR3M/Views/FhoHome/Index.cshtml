@@ -1,0 +1,521 @@
+﻿@using PR3M.Common
+@model PR3M.Models.HomeViewModels
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+@section TextHeaderTopBefore{
+    <div class="text-header-top"><a href="/Menu">Quay về trang menu</a></div>
+}
+@section TextHeaderTopAfter{
+    <div class="text-header-top">
+        @Html.ActionLink("Đăng xuất", "LogOut", "Account");
+    </div>
+}
+@section PrivateCss{
+    <link rel="stylesheet" href="~/Content/Css/Homeclone.css" />
+    <style>
+        .arrow-up, .arrow-down {
+            cursor: pointer;
+        }
+
+        video {
+            width: 350px;
+            margin-top: 20%;
+            height: 200px;
+        }
+
+        /*display modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 16.7rem;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: #474e5d;
+            padding-top: 50px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 65%;
+            text-align: center;
+        }
+
+        .close {
+            position: absolute;
+            right: 35px;
+            top: 15px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #f1f1f1;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        a.load-file {
+            text-decoration: none;
+            color: #fff;
+            padding: 1rem 3rem;
+            background-color: green;
+        }
+
+        hr {
+            height: 2px;
+            background-color: orange;
+        }
+
+        .group-image {
+            display: flex;
+        }
+
+        .image1 {
+            width: 500px;
+            margin: 10px;
+        }
+
+        img.modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            cursor: pointer;
+        }
+
+        .name-image {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        img.modal-image.bovien {
+            border: 1px solid black;
+        }
+
+        #style-1::-webkit-scrollbar {
+            width: 6px;
+            background-color: #F5F5F5;
+        }
+
+        #style-1::-webkit-scrollbar-thumb {
+            background-color: #000000;
+        }
+
+        #style-1::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+
+        .header-modal {
+            width: 100%;
+            height: 100px;
+            background-color: #fff;
+            display: flex;
+            top: 50px;
+        }
+
+        a.cancel {
+            font-size: 24px;
+            color: red;
+            font-weight: 700;
+            padding: 8rem 33rem;
+            text-decoration: none;
+        }
+
+        .choice {
+            width: 50%;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        button.but-modalChooseLogo {
+            border: none;
+            font-size: 24px;
+            font-family: sans-serif;
+            color: red;
+            font-weight: bold;
+            background-color: white;
+        }
+
+
+        .modal.container {
+            padding: 16px;
+            text-align: center;
+        }
+
+
+        /*Add to delete modal*/
+        .cancelbtn,
+        .deletebtn,
+        .accept {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        .cancelbtn,
+        .deletebtn,
+        .accept {
+            opacity: 1;
+        }
+
+        .cancelbtn, .deletebtn {
+            float: left;
+            width: 50%;
+        }
+
+        .cancelbtn {
+            background-color: #ccc;
+            color: black;
+        }
+
+        .deletebtn {
+            background-color: #f44336;
+        }
+    </style>
+}
+
+@{
+    int prSystemId = ((PR3M.DBModel.User)Session["CurrentUserObject"]).PRSystemId;
+}
+<div class="Slider">
+    <div class="slideshow-container">
+        @foreach (PR3M.DBModel.Slider slide in ViewBag.Slider)
+        {
+            <div class="mySlides fade">
+                <img src="~/Content/Image/Slider/@slide.SliderName" style="width:100%;height: 760px;" class="cover">
+            </div>
+        }
+    </div>
+    <div class="new">
+        <button class="btn btn-info" onclick="window.location.href='@Url.Action("CreatePost")'">Tạo chủ đề mới</button>
+        <button class="btn btn-info" onclick="window.location.href='@Url.Action("EditSlider")'">Thay đổi slider</button>
+    </div>
+</div>
+<div class="line-page"></div>
+@{
+    int id = 0;
+}
+@foreach (var item in Model.Posts)
+{
+    id++;
+    <section>
+        <div class="document-show" id="@("post" + id)">
+            <div class="line"></div>
+            <div class="">
+                <div class="title-pharse">
+                    <div class="title-organization">
+                        <div class="title-brochure-edu">
+                            @if (item.PostEngTitle != null && !item.PostEngTitle.Trim().IsEmpty())
+                            {
+                                <b>@item.PostTitle /</b><span>@item.PostEngTitle</span>
+                            }
+                            else
+                            {
+                                <b>@item.PostTitle </b><span></span>
+                            }
+                        </div>
+                        <div class="arrow-up" onclick="changePositionUp(event,@item.PostId,@id)"><a><i class="fas fa-arrow-circle-up"></i></a></div>
+                        <div class="arrow-down" onclick="changePositionDown(event,@item.PostId,@id)"><a><i class="fas fa-arrow-circle-down"></i></a></div>
+                    </div>
+                    @if (prSystemId == 0)
+                    {
+                        <div class="btn btn-success su" onclick="window.location.href='@Url.Action("EditPost", "FhoHome", new { postId = item.PostId })'">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 17px"></i>&ensp;Sửa bài viết
+                        </div>
+                    }
+                    <div class="btn btn-success su" onclick="window.location.href='@Url.Action("AddMaterialToPost", "FhoHome", new { postId = item.PostId })'">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 17px"></i>&ensp;Chèn thêm file
+                    </div>
+                    <div class="btn btn-danger su" onclick="displayModalConfirmDeletePost(@item.PostId,'@item.PostTitle')">
+                        <i class="fa fa-trash" aria-hidden="true" style="font-size: 17px"></i>&ensp;Xóa chủ đề
+                    </div>
+                </div>
+                <div class="brochure-logo">
+                    @{
+                        int i = 0;
+                    }
+                    @foreach (var material in item.Materials.Where(m => m.IsDelete == false))
+                    {
+                        i++;
+                        <div class="version-logo">
+                            @{
+                                int typeOfMime = CommonOutput.typeOfMIME(material.MIMEType);
+                                if (typeOfMime == 1)
+                                {
+                                    <img src="~/Content/Materials/Root/Post/@(item.PostHashRealFolder + "/" + material.MaterialName + "." + material.MIMEType)" class="khung">
+                                }
+                                else if (typeOfMime == 2)
+                                {
+                                    <video controls class="videoInFEHOHome">
+                                        <source src="~/Content/Materials/Root/Post/@(item.PostHashRealFolder + "/" + material.MaterialName + "." + material.MIMEType)" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                }
+                                else
+                                {
+                                    if (material.ImageAvatar == null)
+                                    {
+                                        <img src="~/Content/Image/Icon/@(material.MIMEType + ".png")" class="khung">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/Materials/Root/Post/@(item.PostHashRealFolder + "/" + material.ImageAvatar)" class="khung">
+                                    }
+                                }
+                            }
+                            <div class="title-version"><b>@material.MaterialDisplayName </b></div>
+                            <div class="fix">
+                                <div class="title-version-action">@Html.ActionLink("Chỉnh sửa", "EditMaterialInPost", "FhoHome", new { MaterialId = material.MaterialId }, new { @class = "dl" })  </div>
+                                <div class="title-version-action" style="cursor:pointer;"><a onclick="displayModalConfirmDelete(this,@material.MaterialId)" class="dl">Xóa</a>  </div>
+                                @if (material.IsHilde)
+                                {
+                                    <div class="title-version-action"><a href="#" class="dl hildeBtnAjax" data-id="@material.MaterialId" id="MaterialHide-@material.MaterialId">Bỏ ẩn</a></div>
+                                    @*@Html.ActionLink("Bỏ ẩn", "#", "Home", new { MaterialId = material.MaterialId }, new { @class = "dl", @onclick = "HideMaterial(event," + material.MaterialId + ")", @id = ("MaterialHide" + material.MaterialId) })*@
+                                }
+                                else
+                                {
+                                    <div class="title-version-action"><a href="#" class="dl hildeBtnAjax" data-id="@material.MaterialId" id="MaterialHide-@material.MaterialId">Ẩn đi</a></div>
+                                }
+                            </div>
+                        </div>
+                        if (i % 4 == 0)
+                        {
+                            <br />
+                        }
+                    }
+                    @{
+                        while (i % 4 != 0)
+                        {
+                            <div class="version-logo"></div>
+                            i++;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<section>
+    <div class="document-show">
+        <div class="line"></div>
+        <div class="">
+            <div class="title-pharse">
+                <div class="title-organization">
+                    <div class="title-brochure-edu">
+                        <b>HỆ THỐNG LOGO TỔ CHỨC GIÁO DỤC FPT /</b><span>FPT Education Logo</span>
+                    </div>
+                </div>
+                <div class="btn btn-success su" onclick="window.location.href='@Url.Action("EditPost", "FhoHome", new { postId = 0 })'">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 17px"></i>&ensp;Sửa tiêu đề bài viết Logo
+                </div>
+                <div class="btn btn-success su" onclick="window.location.href='@Url.Action("CreateLogo", "FhoHome",null)'">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 17px"></i>&ensp;Thêm logo mới
+                </div>
+            </div>
+            <div class="brochure-logo">
+                @{
+                    int j = 0;
+                    foreach (var logo in Model.LogoPost)
+                    {
+                        <div class="version-logo">
+                            @if (Model.LogoImage[j] == null)
+                            {
+                                <img src="~/Content/Image/Logo/LogoPL.png" width="100%" class="logo-base-fpt-FUHO" id="logo@(logo.PostId)">
+                            }
+                            else
+                            {
+                                <img src="~/Content/Materials/Root/Logo/@(logo.PostHashRealFolder+"/"+Model.LogoImage[j].Material.MaterialName+"."+Model.LogoImage[j].Material.MIMEType)" width="100%" class="logo-base-fpt-FUHO" id="logo@(logo.PostId)">
+                            }
+
+                            <div class="title-version"><b>@logo.PostTitle</b></div>
+                            <div class="fix">
+                                <div class="title-version-action-FEHO" onclick="displayModalConfirmDeletePost(@logo.PostId,'@logo.PostTitle')">
+                                    <a class="title1">Xóa</a>
+                                </div>
+                                <div class="title-version-action-FEHO">
+                                    @Html.ActionLink("Chỉnh sửa", "EditPost", "FhoHome", new { postId = logo.PostId }, new { @class = "title1" })
+                                </div>
+                                <div class="title-version-action-FEHO" onclick="openModal(event, @logo.PostId)">
+                                    <a class="title1">Thay đổi ảnh hiển thị</a>
+                                </div>
+
+                                <div class="title-version-action-FEHO">
+                                    @Html.ActionLink("Thêm tập tin mới", "AddMaterialToPost", "FhoHome", new { postId = logo.PostId }, new { @class = "title1" })
+                                </div>
+
+                            </div>
+                        </div>
+                        j++;
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<div id="Demo" class="modal">
+    <div class="modal-content" id="dataDisplayModal">
+
+    </div>
+</div>
+<div id="modalDelete" class="modal">
+    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+    @using (Html.BeginForm("DeleteMaterial", "PRMain", FormMethod.Post, new { @class = "modal-content" }))
+    {
+        <div class="container">
+            <h1>Delete Document</h1>
+            <div class="question">Are you sure you want to delete your document?</div>
+            <div class="clearfix">
+
+                @Html.Hidden("MaterialID", null, new { @id = "MaterialIDForDelete" })
+                <input type="hidden" name="currentFolderId" value="null" />
+                <input type="hidden" name="isSubFolder" value="null" />
+                <input type="hidden" name="route" value="" />
+                <input type="hidden" name="viewHidden" value="" />
+                <button type="submit" class="deletebtn">Delete</button>
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+            </div>
+        </div>
+    }
+</div>
+<div id="modalDeletePost" class="modal">
+    <span onclick="document.getElementById('modalDeletePost').style.display='none'" class="close" title="Close Modal">×</span>
+    @using (Html.BeginForm("DeletePost", "FhoHome", FormMethod.Post, new { @class = "modal-content" }))
+    {
+        <div class="container">
+            <h1>Delete Document</h1>
+            <div class="question" id="QuesionConfirmDeletePost"></div>
+            <div class="clearfix">
+                <button type="submit" onclick="" class="deletebtn">Delete</button>
+                <button type="button" onclick="document.getElementById('modalDeletePost').style.display='none'" class="cancelbtn">Cancel</button>
+                @Html.Hidden("PostId", -1, new { @id = "inputPostIdDelete" })
+            </div>
+
+        </div>
+    }
+</div>
+<br>
+<div class="back-to-top"><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
+@section scripts{
+    <script src="~/Scripts/JS/FhoHome.js"></script>
+    <script>
+
+        function displayModalConfirmDeletePost(PostId, PostName) {
+            $('#modalDeletePost').css("display", "block");
+            $('#inputPostIdDelete').val(PostId);
+            $('#QuesionConfirmDeletePost').removeData();
+            $('#QuesionConfirmDeletePost').append("Bạn có muốn xóa " + PostName);
+        }
+
+        function displayModalConfirmDelete(e, materialId) {
+            $('#modalDelete').css("display", "block");
+            $('#inputMaterialIdDelete').val(materialId)
+        }
+
+
+
+
+
+        function changePositionUp(e, id, idDiv) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "/FhoHome/ChangePositionUp",
+                data: { id: id },
+                type: "Post",
+                success: function (data) {
+                    if (data.status == true) {
+                        ////switch data
+                        //divDuoi = $('#post' + idDiv);
+                        //divTren = $('#post' + (idDiv - 1));
+                        //tdiv1 = divDuoi.clone();
+                        //tdiv1.attr("id", "post" + (idDiv - 1));
+                        //tdiv2 = divTren.clone();
+                        //tdiv2.attr("id", "post" + idDiv);
+                        //divDuoi.replaceWith(tdiv2);
+                        //divTren.replaceWith(tdiv1);
+                        ////swith id
+                        ////divDuoi.attr("id", "post" + (idDiv-1));
+                        ////divTren.attr("id", "post" + idDiv);
+                        location.reload();
+                    }
+                },
+                error: function (message) {
+                    alert(message);
+                }
+            });
+        }
+
+        function changePositionDown(e, id, idDiv) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "/FhoHome/changePositionDown",
+                data: { id: id },
+                type: "Post",
+                success: function (data) {
+                    if (data.status == true) {
+                        location.reload();
+                    }
+                },
+                error: function (message) {
+                    alert(message);
+                }
+            });
+        }
+
+        var modal = document.getElementById("Demo");
+        function openModal(e, postId) {
+            e.preventDefault();
+            $.ajax({
+                url: "/FhoHome/ChangePostLogoAvatarImage",
+                data: { postId: postId },
+                type: "GET",
+                success: function (data) {
+                    $("#dataDisplayModal").html(data);
+                },
+                error: function (message) {
+                    alert("Open modal error: " + message);
+                }
+            });
+            modal.style.display = "block";
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    $("#dataDisplayModal").removeData();
+                }
+            }
+        }
+
+        /* slide show */
+        var slideIndex = 0;
+        showSlides();
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1 }
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, 5000); // Change image every 2 seconds
+            /* slide show */
+        }
+    </script>
+}

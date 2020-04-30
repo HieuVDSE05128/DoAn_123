@@ -1,0 +1,256 @@
+﻿@using PR3M.Common
+@model PR3M.Models.MaterialEditViewModel
+@section HeaderAndFooter{
+    <link href="~/Content/Css/CssHeader1.css" rel="stylesheet" />
+    <link href="~/Content/Css/CssFooter.css" rel="stylesheet" />
+}
+@section PrivateCss{
+    <style>
+        .div-display-IconForFile {
+            width: 410px;
+            height: 408px;
+            margin-bottom: 25px;
+            padding: 28px;
+            background-color: #ffffff;
+            border: 1px solid;
+        }
+
+            .div-display-IconForFile img {
+                width: 100%;
+                height: 100%;
+                border: 1px solid black;
+                object-fit: cover;
+            }
+
+        input.fileInput {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .fileInput + label {
+            max-width: 80%;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+            display: inline-block;
+            overflow: hidden;
+            padding: 0.625rem 0rem;
+        }
+
+            .fileInput + label:hover {
+                color: orange;
+            }
+
+        .EditMaterialPost-modal {
+            padding: 0px 45px 3rem 45px;
+        }
+
+        .label-cover-inputFile {
+        }
+
+        h2 {
+            font-weight: bold;
+            color: orange;
+            font-family: sans-serif;
+        }
+
+        .Delete-Page {
+            padding: 0rem 45px 3rem 45px;
+        }
+
+        h3 {
+            padding: 0rem 0rem 1rem 0rem;
+            color: red;
+        }
+
+        h4 {
+            color: green;
+            font-size: 20px;
+        }
+
+        hr {
+            border: 0px;
+            background-color: orange;
+            height: 2px;
+        }
+
+        a.backPage {
+            text-decoration: none;
+            color: blue;
+            font-size: 16px;
+            font-family: sans-serif;
+        }
+
+        dd {
+            padding: 5px;
+        }
+
+        dt {
+            padding: 5px;
+        }
+
+        span {
+            font-size: 20px;
+            color: green;
+            font-family: sans-serif;
+        }
+
+        .col-md-10 {
+            width: 20%;
+        }
+
+        .form-horizontal .control-label {
+            padding-top: 7px;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .col-md-offset-2 {
+            margin-left: 0;
+        }
+
+        .col-md-2 {
+            width: 6%;
+        }
+    </style>
+}
+<div class="EditMaterialPost-modal">
+    <h2>Chỉnh sửa tài nguyên</h2>
+
+    @using (Html.BeginForm("EditMaterialInPost", "FhoHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group" style="padding-left:15px">
+                <input type="file" name="fileInput" class="fileInput" id="fileInput" hidden="hidden" onchange="changeHandler(event)" />
+                <label for="fileInput"><span>Chọn file mới để thay thế</span></label>
+            </div>
+            <div class="form-group" style="padding-left:15px;">
+                <div class="div-display-IconForFile">
+                    @{
+                        int typeOfMime = CommonOutput.typeOfMIME(Model.MIMEType);
+                        if (typeOfMime == 1)
+                        {
+                            <img id="iconForFile" src="~/Content/Materials/Root/Post/@(Model.FolderPath+"/"+Model.Name+"."+Model.MIMEType)" />
+                        }
+                        else
+                        {
+                            if (Model.ImageAvatar != null)
+                            {
+                                <img id="iconForFile" src="~/Content/Materials/Root/Post/@(Model.FolderPath+"/"+Model.ImageAvatar)" />
+                            }
+                            else
+                            {
+                                <img id="iconForFile" src="~/Content/Image/Icon/@(Model.MIMEType+".png")" />
+                            }
+                        }
+                    }
+
+                </div>
+                @if (typeOfMime != 1)
+                {
+                    <div class="but-changeAvaImageForMaterial">
+                        <input type="file" value="Thay đổi ảnh bìa" class="fileInput" name="fileAvatarImage" id="inputAvatarImage" accept="image/*" onchange="changeAvatarImage(event)" />
+                        <label for="inputAvatarImage"><span>Thay đổi ảnh bìa</span></label>
+                    </div>
+                }
+            </div>
+            @Html.HiddenFor(model => model.Id, new { @id = "inputModelId", @value = Model.Id })
+            @Html.HiddenFor(model => model.Name, new { @id = "inputModelName", @value = Model.Name })
+            @Html.HiddenFor(model => model.MIMEType, new { @id = "inputModelMIMEType", @value = Model.MIMEType })
+            @Html.HiddenFor(model => model.PostId, new { @id = "inputModelPostId", @value = Model.PostId })
+            <div class="form-group">
+                @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsHide, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.IsHide)
+                    @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Lưu lại" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "backPage" })
+    </div>
+</div>
+@section scripts{
+    <script>
+        function isImage(extension) {
+            var imageExtensions = ["apng", "bmp", "gif", "ico", "cur", "jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "tif", "tiff", "webp"];
+            return imageExtensions.includes(extension);
+        }
+        function changeHandler(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            var files = evt.target.files;
+            var file = files[0];
+            var fileReader = new FileReader();
+            fileReader.onload = function (progressEvent) {
+                if (isImage(extension)) {
+                    var url = fileReader.result;
+                    var iconForFile = document.getElementById("iconForFile");
+                    iconForFile.src = url;
+                } else {
+                    url = "/Content/Image/Icon/" + extension + ".png";
+                    var iconForFile = document.getElementById("iconForFile");
+                    iconForFile.src = url;
+                }
+            }
+            var fileName = file.name;
+            var extension = fileName.replace(/^.*\./, '');
+            var size = parseInt(evt.target.files[0].size);
+            $('input[id = "DisplayName"]').val(fileName);
+            if (fileName.includes(".")) {
+                $('input[id = "inputModelName"]').val(fileName.split('.')[0]);
+                $('input[id = "inputModelMIMEType"]').val(extension);
+            } else {
+                $('input[id = "inputModelName"]').val(fileName.split('.')[0]);
+                $('input[id = "mimeTypeInput"]').val("file");
+            }
+            $('input[id = "sizeInput"]').val(size);
+            if (isImage(extension) == false) {
+                document.getElementById('inputAvatarImage').removeAttribute('hidden');
+            } else {
+                document.getElementById('inputAvatarImage').setAttribute('hidden', 'hidden');
+            }
+            fileReader.readAsDataURL(file);
+        }
+
+        function changeAvatarImage(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            var files = evt.target.files;
+            var file = files[0];
+            var fileReader = new FileReader();
+
+            fileReader.onload = function (progressEvent) {
+                var url = fileReader.result;
+                var iconForFile = document.getElementById("iconForFile");
+                iconForFile.src = url;
+            }
+
+            fileReader.readAsDataURL(file);
+        }
+    </script>
+}

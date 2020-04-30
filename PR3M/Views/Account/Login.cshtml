@@ -1,0 +1,53 @@
+﻿@using CaptchaMvc.HtmlHelpers
+@using PR3M.Models
+@model LoginViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "Đăng nhập";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hệ thống số hóa thương hiệu FPT Education</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="~/Content/Css/LoginForm.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="imgcontainer">
+        <img src="~/Content/Image/Header.png" alt="Avatar" class="avatar">
+    </div>
+    <div class="container">
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <label for="uname"><b>Username</b></label>
+            @Html.TextBoxFor(m => m.username, new { @placeholder = "Enter Username" })
+            @Html.ValidationMessageFor(m => m.username, "", new { @class = "text-danger" })<br/>
+            <label for="psw"><b>Password</b></label>
+            @Html.PasswordFor(m => m.Password, new { @placeholder = "Enter Password" })
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+            <button type="submit">Login</button>
+            <label>
+                @Html.EditorFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe)
+            </label>
+
+
+        }
+
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModelForOnlyGoogle { ReturnUrl = ViewBag.ReturnUrl })
+        </section>
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</body>
+</html>
+
