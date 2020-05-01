@@ -1,0 +1,16 @@
+10.14.64.50
+db name PGB.BOC
+username dev
+password pass@word1
+
+
+Object reference not set to an instance of an object.
+
+
+  "ConnectionStrings": {
+    "myTimexConnectionString": "Data Source=1ictmytimexdb01.database.windows.net;Initial Catalog=Timex_Staging;User ID=MyTimexStaging;Password=Petronas@2019;MultipleActiveResultSets=True;"
+  },
+  
+  
+git config --global --add http.proxy http://dangnh19:123%40123a7@fsoft-proxy:8080
+git config --global --add https.proxy https://dangnh19:123%40123a7@fsoft-proxy:8080

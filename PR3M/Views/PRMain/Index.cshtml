@@ -47,9 +47,9 @@
         <a>Folder:</a>
         @foreach (PR3M.Models.FolderLinkViewModels flvm in CommonOutput.GetListLinkFolder(Model.CurrentFolder.FolderId))
         {
-            @Html.ActionLink(flvm.FolderName+" > ", "Index", new { @FolderId = flvm.FolderId})
+            @Html.ActionLink(flvm.FolderName + " > ", "Index", new { @FolderId = flvm.FolderId })
         }
-        
+
     </div>
     @if (TempData["SuccessMessage"] != null)
     {
@@ -83,8 +83,21 @@
         @using (Html.BeginForm("UploadFile", "PRMain", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
         {
             <label for="email">Tải file mới: </label>
-            <input type="file" name="fileInput" id="fileInput" multiple />
+            <input type="file" name="fileInput" id="fileInput" multiple/>
             <input type="hidden" name="currentFolderId" value="@Model.CurrentFolder.FolderId" />
+            <button type="submit" class="accept">Đồng ý</button>
+        }
+    </div>
+</div>
+
+<div class="uploadFile displayNone" id="modalEditFile">
+    <div class="modal-content-bisu">
+        <span class="close-modal">&times;</span>
+        @using (Html.BeginForm("EditFile", "PRMain", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
+        {
+            <label for="email">Cập nhật file mới: </label>
+            <input type="file" name="fileInput" id="fileInput"  />
+            <input type="hidden" id="fileId"name="fileId" />
             <button type="submit" class="accept">Đồng ý</button>
         }
     </div>
@@ -110,103 +123,7 @@
 </section>
 <section>
     <div id="container">
-        <div id="myBtnContainer">
-            <div class="bton active" onclick="filterSelection('all')"> Show all</div>
-            <div class="bton" onclick="filterSelection('Folder')">Document</div>
-            <div class="bton" onclick="filterSelection('Image')">Image</div>
-            <div class="bton" onclick="filterSelection('Video')">Video</div>
-        </div>
-        <div class="buttons">
-            <button class="grid btn btn-info btn-lg"><i class="fa fa-th" aria-hidden="true"></i>&ensp;Grid View</button>
-            <button class="list btn btn-info btn-lg"><i class="fa fa-list" aria-hidden="true"></i>&ensp;List View</button>
-        </div>
-        <div class="checkbox-file">
-            <form action="/action_page.php" class="checkbox-file-form">
-                <input type="submit" value="Search" class="search-button">
-                <input type="search" id="gsearch" name="gsearch">
-            </form>
-            <form class="checkbox-file-form">
-                @Html.CheckBox("hiddenview", true, new { @id = "hiddenview" })
-                <label for="hiddenview">view hidden</label><br>
-            </form>
-        </div>
-        <div class="grid ul">
-            @foreach (PR3M.DBModel.FileInDB m in Model.CurrentFolder.FileInDBs.OrderByDescending(p => p.LaunchedDate))
-            {
-                string filterType = "";
-                int typeOfMine = CommonOutput.typeOfMIME(m.MIMEType);
-                if (typeOfMine == 1) { filterType = "Image li"; }
-                else if (typeOfMine == 2) { filterType = "Video li"; }
-                else if (typeOfMine == 3) { filterType = "Folder li"; }
-                <div id="materials[@m.FileId]" class="filterDiv @filterType">
-                    <div class="gallery">
-                        @if (typeOfMine == 1)
-                        {
-                            <a target="_blank" href="~/@(CommonOutput.GetFullPathOfFile(m.FileId))" class="image-gallery">
-                                <img src="~/@(CommonOutput.GetFullPathOfFile(m.FileId))" alt="Cinque Terre">
-                            </a>
-                        }
-                        else if (typeOfMine == 2)
-                        {
-                            <video controls>
-                                <source src="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.FileId)" type="@CommonOutput.RtnVideoControlType(m.MIMEType)">
-                                @*<source src="Videos/movie.ogv" type="video/ogg">*@
-                                Your browser does not support HTML5 video.
-                            </video>
-                        }
-                        else //if (typeOfMine == 3)
-                        {
-                            <a target="_blank" href="~/Content/Materials/@CommonOutput.GetFullPathMaterial(m.FileId)" class="image-gallery">
-                                <img src="~/Content/Image/file.png" alt="Cinque Terre">
-                            </a>
-                        }
-                            <div class="infor-gallery">
-                                <div class="desc">@(m.FileName + "." + m.MIMEType)</div>
-                                <div class="name-action-file">
-                                    <div>
-                                        <i class="fa fa-user" aria-hidden="true" style="padding: 0px;margin: 0px 1px"></i>&ensp;@m.User.FullName
-                                    </div>
-                                    <div>
-                                        <i class="fa fa-calendar" aria-hidden="true" style="padding: 0px;margin: 0px 1px"></i>&ensp;@m.LaunchedDate
-                                    </div>
-                                </div>
-                                <div class="group">
-                                    <button type="submit" class="btn btn-success" onclick="location.href='@Url.Action("Download","PRMain",new { MaterialsId = m.FileId })'">Download</button>
-                                    <button type="button" class="btn btn-success" onclick="document.getElementById('id01').style.display='block'">Delete</button>
-                                    <button type="button" class="btn btn-success heo" onclick="location.href='@Url.Action("EditMaterials","PRMain",new { MaterialsId = m.FileId })'">Edit</button>
-                                    @if (m.IsHide)
-                                    {
-                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">UnHide</button>*@
-                                        <a href="#" class="btn-active" data-id="@m.FileId">UnHide</a>
-
-                                    }
-                                    else
-                                    {
-                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">Hidden</button>*@
-                                        <a href="#" class="btn-active" data-id="@m.FileId">Hide</a>
-                                    }
-                                </div>
-                                <div class="group">
-                                    <button type="submit" class="btn btn-success" onclick="location.href='@Url.Action("Download","PRMain",new { MaterialsId = m.FileId })'">Check MD5</button>
-                                    <button type="button" class="btn btn-success" onclick="document.getElementById('id01').style.display='block'">Delete</button>
-                                    <button type="button" class="btn btn-success heo" onclick="location.href='@Url.Action("EditMaterials","PRMain",new { MaterialsId = m.FileId })'">Edit</button>
-                                    @if (m.IsHide)
-                                    {
-                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">UnHide</button>*@
-                                        <a href="#" class="btn-active" data-id="@m.FileId">UnHide</a>
-
-                                    }
-                                    else
-                                    {
-                                        @*<button type="button" class="btn btn-success hidenItem" data-id="@m.MaterialsId">Hidden</button>*@
-                                        <a href="#" class="btn-active" data-id="@m.FileId">Hide</a>
-                                    }
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            }
-        </div>
+        @Html.Action("DataPartial");
     </div>
 </section>
 @*<div id="id01" class="modal">
@@ -259,7 +176,7 @@
         function displayModalInputFile() {
             $('#modalInputFile').removeClass('displayNone');
 
-        }
+        }       
 
         $(document).ready(function () {
             $("#uploadFolder").uploadFile({
@@ -303,5 +220,61 @@
                 }
             });
         });
+
+        function displayModalEditFile(FileId) {
+            debugger;
+            $('#modalEditFile').removeClass('displayNone');
+            $('#fileId').val(FileId);
+        }
+
+        function filter() {
+            var folderId = $("#SearchfolderId").val();
+            var gSearch = $("#gsearch").val();
+            var ViewHidden = $("#hiddenview").val();
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("DataPartial", "PRMain")",
+                data: { folderId: folderId, ViewHidden: ViewHidden, gsearch: gSearch},
+                success: function (data) {
+                    document.getElementById("container").innerHTML = data;
+                },
+                error: function () {
+                    document.getElementById("container").innerHTML = "Có lỗi xảy ra!";
+                }
+            });
+        }
+
+        function DeleteFile(fileId) {
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("DeleteFile", "PRMain")",
+                data: { fileId: fileId},
+                success: function (data) {
+                    if (data == "True") {
+                        $("#search").click();
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra");
+                }
+            });
+        }
+        function UpdateHideFile(fileId, isHide) {
+            debugger;
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("UpdateHideFile", "PRMain")",
+                data: { fileId: fileId, isHide: isHide},
+                success: function (data) {
+                    if (data == "True") {
+                        $("#search").click();
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra");
+                }
+            });
+        }
+
     </script>
 }

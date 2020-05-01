@@ -1,0 +1,91 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=10.17.72.26;Initial Catalog=DialogCoreApplicationDB-R3;User ID=sa;Password=abcde12345-;Max Pool Size=1000000;Pooling=true"
+  },
+  "MyConfigs": {
+    "JSONProductURL": "ProductExamples.json",
+    "JSONConfigSequenceNumberSettingURL": "ConfigSequenceNumbers.json",
+    "JSONConfigApplicationURL": "ConfigApplication.json",
+    "JSONUserTypeURL": "UserType.json",
+    "JSONActionTypeURL": "ActionType.json",
+    "JSONStatusURL": "Status.json",
+    "ApprovalSettingConfigApplicationURL": "ApprovalSettingConfigApplication.json",
+    "JSONNotificationSettingConfigURL": "NotificationSettingConfig.json",
+    "JSONWorkFlowURL": "WorkFlowConfig.json",
+    "JSONEmailTemplateField": "EmailTemplateField.json",
+    "RedisConnection": "10.17.72.26,defaultDatabase=2",
+    "SSOUrl": "https://10.17.72.25:9443",
+    "CoreUrl": "http://10.17.72.26:4200",
+    "SSOHost": "10.17.72.25:9443",
+    "SSOTenant": "@carbon.super",
+    "ADDomain": "dialogasia.com",
+    "NotificationHub": {
+      //"ConnectionString": "Endpoint=sb://coreapphub.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=xopec3YtfE9p2tlVRh37cQKWwbhQfzxpyUU3k0Px/ao=",
+      "ConnectionString": "Endpoint=sb://coreapphub.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=tfVyQlxB9hUUOcpy0BR2F94+jenUr192Ogbo4NuciWA=",
+      "HubName": "CoreAppNotificationHub"
+    },
+    "AdminSSO": "admin@wso2.com",
+    "AdminPasswordSSO": "admin"
+  },
+  "SmtpConfig": {
+    "SmtpServer": "127.0.0.1",
+    "SmtpPort": "25",
+    "SmtpUsername": "",
+    "SmtpPassword": "",
+    "EnableSsl": "false",
+    "SenderEmail": "dialog-core-app@support.com.vn"
+  },
+  "TaskScheduler": {
+    "User": "appadmin",
+    "Password": "abcde12345-"
+  },
+  "RecordLink": {
+    "Tenant": "/#/tenants/detail/{0}",
+    "ProductPackagePlan": "/#/package-plan/detail/{0}",
+    "ScheduleTask": "/#/setting/schedule-task/detail/{0}",
+    "Company": "/#/companies/detail/{0}",
+    "Project": "/#/projects/detail/{0}",
+    "Employee": "/#/employees/detail/{0}",
+    "CustomerEmployee": "/#/employees/for-customer/{1}/detail/{0}",
+    "ContractorEmployee": "/#/employees/for-contractor/{1}/detail/{0}",
+    "Customer": "/#/customers/detail/{0}",
+    "Contractor": "/#/contractors/detail/{0}"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+  "JwtIssuerOptions": {
+    "JwtKey": "AQAAAAEAACcQAAAAEF8dywtEHj7JjUihCWfr0HAtzBVOak5jF8R5d6vEm1H7yZwCqBbJRDvfRNt5fPA",
+    "JwtIssuer": "http://localhost:44344",
+    "JwtExpireDays": 30
+  },
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console" ],
+    "MinimumLevel": "Information",
+    "WriteTo": [
+      {
+        "Name": "RollingFile",
+        "Args": {
+          "pathFormat": "Logs\\log-{Date}.txt",
+          "formatter": "Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact",
+          "fileSizeLimitBytes": 104857600,
+          "retainedFileCountLimit": 5,
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] : {Message} {NewLine} {Exception}"
+        }
+      }
+    ]
+  },
+  "ProxyConfiguration": {
+    "useProxy": true,
+    "Username": "chinhnh",
+    "Password": "fsoft@12345",
+    "Domain": "fsoft.fpt.vn",
+    "AddressProxy": "http://10.16.29.21:8080"
+  },
+  "SharepointConfig": {
+    "baseURL": "http://10.17.72.26:8083/api/Upload/UploadToSharepoint"
+  },
+  "AllowedHosts": "*"
+}

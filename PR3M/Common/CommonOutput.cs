@@ -82,6 +82,64 @@ namespace PR3M.Common
             }
         }
 
+        public static string GetFullPathFile(int fileId)
+        {
+            PRConnect db = null;
+            try
+            {
+                db = new PRConnect();
+                var file = db.FileInDBs.Find(fileId);
+                if(file != null)
+                {
+                    var path = getPathFolder(file.FolderId);
+
+                    return $"{path}/{file.FileName}.{file.MIMEType}";
+                }
+                return "không tìm thấy file";
+                
+            }
+            catch (Exception ex)
+            {
+                return "Something error: " + ex.Message;
+            }
+            finally
+            {
+                if (db != null)
+                {
+                    db = null;
+                }
+            }
+        }
+        public static string getPathFolder(int folderId)
+        {
+
+            PRConnect db = null;
+            try
+            {
+                db = new PRConnect();
+                var folder = db.Folders.Find(folderId);
+                if (folder.ParrentId.HasValue)
+                {
+                    return getPathFolder(folder.ParrentId.Value) + "/" + folder.FolderName;
+                }
+                else
+                {
+                    return folder.FolderName;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Something error: " + ex.Message;
+            }
+            finally
+            {
+                if (db != null)
+                {
+                    db = null;
+                }
+            }
+        }
+
         /// <summary>
         /// Class <c>GetFullPathFolder</c> get full path of post (from root post) by post Id
         /// </summary>
@@ -206,7 +264,8 @@ namespace PR3M.Common
             catch (Exception ex)
             {
                 return null;
-            } finally
+            }
+            finally
             {
                 db.Dispose();
             }

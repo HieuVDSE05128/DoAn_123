@@ -15,14 +15,14 @@ namespace PR3M.Controllers
     {
         private PRConnect db = new PRConnect();
         // GET: PRMain
-        public ActionResult Index(int? FolderId, bool? ViewHidden)
+        public ActionResult Index(int? FolderId, bool? ViewHidden, string gsearch)
         {
             MaterialsFullControllViewModels m = new MaterialsFullControllViewModels();
             string username = Session["currentUser"].ToString();
             m.Users = db.Users.Find(username);
             Session["currentUserFullName"] = m.Users.FullName;
             Session["FirstTimeCreateFolder"] = false;
-            if (FolderId == null)
+            if (FolderId == null || FolderId == 0)
             {
                 //Lay ra folder goc theo PRSystemID cua nguoi dung
                 m.CurrentFolder = db.Folders.Single(p => p.ParrentId == 0 && p.PRSystemId == m.Users.PRSystemId);
@@ -42,6 +42,16 @@ namespace PR3M.Controllers
 
                 Session["ParentId"] = FolderId;
             }
+            if (gsearch != null && gsearch.Length > 0)
+            {
+                Session["gsearch"] = gsearch;
+                var FileInDBs = m.CurrentFolder.FileInDBs.ToList();
+                m.CurrentFolder.FileInDBs = FileInDBs.Where(x => (x.FileName + "." + x.MIMEType).ToLower().Contains(gsearch.Trim().ToLower()) || x.User.FullName.ToLower().Contains(gsearch.Trim().ToLower())).ToList();
+            }
+            else
+            {
+                Session["gsearch"] = "";
+            }
             if (ViewHidden != null)
             {
                 ViewBag.ViewHidden = ViewHidden;
@@ -53,6 +63,56 @@ namespace PR3M.Controllers
             Session["SystemId"] = m.Users.PRSystemId;
             return View(m);
             //return null;
+        }
+
+        public ActionResult DataPartial(int? FolderId, bool? ViewHidden, string gsearch)
+        {
+            MaterialsFullControllViewModels m = new MaterialsFullControllViewModels();
+            string username = Session["currentUser"].ToString();
+            m.Users = db.Users.Find(username);
+            Session["currentUserFullName"] = m.Users.FullName;
+            Session["FirstTimeCreateFolder"] = false;
+            if (FolderId == null || FolderId == 0)
+            {
+                //Lay ra folder goc theo PRSystemID cua nguoi dung
+                m.CurrentFolder = db.Folders.Single(p => p.ParrentId == 0 && p.PRSystemId == m.Users.PRSystemId);
+
+                //Lay ra cac thu muc con trong thu muc hien tai
+                m.FoldersInside = db.Folders.Where(p => p.ParrentId == m.CurrentFolder.FolderId);
+
+                Session["ParentId"] = m.CurrentFolder.FolderId;
+            }
+            else
+            {
+                //Lay ra folder hien tai ma nguoi dung truy cap vao
+                m.CurrentFolder = db.Folders.Single(p => p.FolderId == FolderId && p.PRSystemId == m.Users.PRSystemId);
+
+                //Lay ra cac thu muc con trong thu muc hien tai
+                m.FoldersInside = db.Folders.Where(p => p.ParrentId == FolderId && p.PRSystemId == m.Users.PRSystemId);
+
+                Session["ParentId"] = FolderId;
+            }
+            if (gsearch != null && gsearch.Length > 0)
+            {
+                Session["gsearch"] = gsearch;
+                var FileInDBs = m.CurrentFolder.FileInDBs.ToList();
+                m.CurrentFolder.FileInDBs = FileInDBs.Where(x => (x.FileName + "." + x.MIMEType).ToLower().Contains(gsearch.Trim().ToLower()) || x.User.FullName.ToLower().Contains(gsearch.Trim().ToLower())).ToList();
+            }
+            else
+            {
+                Session["gsearch"] = "";
+            }
+            if (ViewHidden != null)
+            {
+                ViewBag.ViewHidden = ViewHidden;
+            }
+            else
+            {
+                ViewBag.ViewHidden = false;
+            }
+            Session["SystemId"] = m.Users.PRSystemId;
+            m.CurrentFolder.FileInDBs = m.CurrentFolder.FileInDBs.Where(x => x.IsDelete == false).ToList();
+            return PartialView("DataPartial", m);
         }
 
         //public ActionResult PostDisplayAll(int? PostId, int? route, bool? ViewHidden, bool isSubfolder)
@@ -223,8 +283,8 @@ namespace PR3M.Controllers
 
         public FileResult Download(int MaterialsId)
         {
-            string MaterialFullPath = CommonOutput.GetFullPathMaterial(MaterialsId);
-            var FileVirualPath = CommonDataVariable.BaseDirectoryPath + MaterialFullPath;
+            string MaterialFullPath = CommonOutput.GetFullPathFile(MaterialsId);
+            var FileVirualPath = CommonDataVariable.BaseDirectoryOfFolderAndFile + MaterialFullPath;
             return File(FileVirualPath, "application/force- download", Path.GetFileName(FileVirualPath));
         }
 
@@ -346,39 +406,86 @@ namespace PR3M.Controllers
         [HttpPost]
         public ActionResult UploadFile(int currentFolderId, IEnumerable<HttpPostedFileBase> fileInput)
         {
-            Folder f = db.Folders.Single(p => p.FolderId == currentFolderId);
-            var folderName = f.FolderName;
-
-            var savedPath = Server.MapPath(CommonDataVariable.BaseDirectoryOfFolderAndFile + CommonOutput.GetFullPathFolder(f.FolderId) + "/");
-            foreach (var item in fileInput)
+            if (fileInput.Count() > 0)
             {
-                var filePath = Path.Combine(savedPath, item.FileName);
-                item.SaveAs(filePath);
-                FileInfo file = new FileInfo(filePath);
-                if (!string.IsNullOrEmpty(file.Extension))
+                bool uploadSuccess = false;
+                Folder f = db.Folders.Single(p => p.FolderId == currentFolderId);
+                var folderName = f.FolderName;
+
+                var savedPath = Server.MapPath(CommonDataVariable.BaseDirectoryOfFolderAndFile + CommonOutput.GetFullPathFolder(f.FolderId) + "/");
+                foreach (var item in fileInput)
                 {
-                    string username = Session["currentUser"].ToString();
-                    FileInDB newMaterial = new FileInDB()
+                    if (item == null) continue;
+                    var filePath = Path.Combine(savedPath, item.FileName);
+                    item.SaveAs(filePath);
+                    FileInfo file = new FileInfo(filePath);
+                    if (!string.IsNullOrEmpty(file.Extension))
                     {
-                        FileName = file.Name.Replace(file.Extension, ""),
-                        FolderId = currentFolderId,
-                        LaunchedDate = DateTime.Now,
-                        IsHide = false,
-                        IsDelete = false,
-                        MIMEType = file.Extension.Replace(".", ""),
-                        LaunchedBy = username,
-                        LastEditBy = username,
-                        LastEditTime = DateTime.Now,
-                        
-                    };
-                    db.FileInDBs.Add(newMaterial);
-                    db.SaveChanges();
+                        string username = Session["currentUser"].ToString();
+                        FileInDB newMaterial = new FileInDB()
+                        {
+                            FileName = file.Name.Replace(file.Extension, ""),
+                            FolderId = currentFolderId,
+                            LaunchedDate = DateTime.Now,
+                            IsHide = false,
+                            IsDelete = false,
+                            MIMEType = file.Extension.Replace(".", ""),
+                            LaunchedBy = username,
+                            LastEditBy = username,
+                            LastEditTime = DateTime.Now,
+
+                        };
+                        db.FileInDBs.Add(newMaterial);
+                        db.SaveChanges();
+                        uploadSuccess = true;
+                    }
                 }
+
+                if (uploadSuccess)
+                    TempData["message"] = "Tải file mới thành công!";
+                else
+                    TempData["ErrorMessage"] = "chưa nhập file";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "chưa nhập file";
             }
 
-            TempData["message"] = "Tải file mới thành công!";
 
-            return RedirectToAction("Index", new { FolderId = currentFolderId});
+            return RedirectToAction("Index", new { FolderId = currentFolderId });
+        }
+
+        [HttpPost]
+        public ActionResult EditFile(int fileId, HttpPostedFileBase fileInput)
+        {
+            var file = db.FileInDBs.Find(fileId);
+            if (fileInput != null && fileInput.ContentLength > 0 && file != null)
+            {
+
+
+                Folder f = db.Folders.Single(p => p.FolderId == file.FolderId);
+                var folderName = f.FolderName;
+
+                var savedPath = Server.MapPath(CommonDataVariable.BaseDirectoryOfFolderAndFile + CommonOutput.GetFullPathFolder(f.FolderId) + "/");
+                var filePath = Path.Combine(savedPath, fileInput.FileName);
+                fileInput.SaveAs(filePath);
+
+                System.IO.File.Delete(savedPath + file.FileName + "." + file.MIMEType);
+
+                FileInfo FileInServer = new FileInfo(filePath);
+                file.FileName = FileInServer.Name.Split('.').First();
+                file.MIMEType = FileInServer.Extension.Split('.').Last();
+                db.Entry(file).State = EntityState.Modified;
+                db.SaveChanges();
+                TempData["message"] = "Tải file mới thành công!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "chưa nhập file";
+            }
+
+
+            return RedirectToAction("Index", new { FolderId = file.FolderId });
         }
 
         ////---------------Interactive with post
@@ -537,6 +644,30 @@ namespace PR3M.Controllers
 
             return RedirectToAction("PostDisplayAll", new { PostId = currentFolderId, route = route, ViewHidden = viewHidden, isSubfolder = isSubFolder });
         }
+        [HttpGet]
+        public bool DeleteFile(int fileId)
+        {
+            var file = db.FileInDBs.Find(fileId);
+            if (file == null) return false;
 
+            file.IsDelete = true;
+            db.Entry(file).State = EntityState.Modified;
+            db.SaveChanges();
+
+            var serverPath = Server.MapPath(CommonDataVariable.BaseDirectoryOfFolderAndFile + CommonOutput.GetFullPathFolder(file.FolderId) + "/");
+            System.IO.File.Delete(serverPath + file.FileName + "." + file.MIMEType);
+            return true;
+        }
+        [HttpGet]
+        public bool UpdateHideFile(int fileId, bool isHide)
+        {
+            var file = db.FileInDBs.Find(fileId);
+            if (file == null) return false;
+
+            file.IsHide = isHide;
+            db.Entry(file).State = EntityState.Modified;
+            db.SaveChanges();
+            return true;
+        }
     }
 }
